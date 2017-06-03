@@ -24,10 +24,14 @@ class CustomersController extends Controller {
 		$model = new Customer;
 		
 		if ($search) {
-			$model = $model->where('name', 'like', '%'.$search.'%')->where('rfc', 'like', $search.'%');
+			$model = $model
+				->where('name', 'like', '%'.$search.'%')
+				->orWhere('rfc', 'like', '%'.$search.'%')
+				->orWhere('contact', 'like', '%'.$search.'%')
+				->orWhere('email', 'like', '%'.$search.'%');
 		}
 
-		return $model->paginate(5);
+		return $model->orderBy('name', 'ASC')->paginate(10);
 	}
 
 	/**

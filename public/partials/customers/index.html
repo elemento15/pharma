@@ -10,12 +10,14 @@
 		</div>
 	</div>
 
-	<table class="table table-bordered cls-table">
+	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th>Actions</th>
-				<th>Nombre</th>
+				<th width="70">Actions</th>
+				<th>Nombre/Contacto</th>
 				<th>RFC</th>
+				<th>Tel./Cel.</th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -30,8 +32,19 @@
 						</button>
 					</div>
 				</td>
-				<td>{{ rec.name  }}</td>
+				<td>
+					<div>{{ rec.name  }}</div>
+					<div class="cls-small"><i> {{ rec.contact }}</i></div>
+				</td>
 				<td>{{ rec.rfc }}</td>
+				<td>
+					<div class="cls-small">{{ rec.phone }}</div>
+					<div class="cls-small">{{ rec.mobile }}</div>
+				</td>
+				<td>
+					<span class="label label-default" ng-if="rec.active">Activo</span>
+					<span class="label label-warning" ng-if="!rec.active">Inactivo</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>

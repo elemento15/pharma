@@ -2,6 +2,10 @@ body {
 	background-color: #F6F6F6;
 }
 
+.navbar {
+	margin-bottom: 0px;
+}
+
 .cls-menu {
 	margin-top: 15px;
 }
@@ -53,6 +57,12 @@ table.cls-table tr td .cls-actions {
 table.cls-table tr:hover td .cls-actions {
 	padding: 0px;
 	display: block;
+}
+
+table td .cls-small {
+	font-size: 12px;
+	line-height: 16px;
+	color: #666;
 }
 
 nav.cls-pagination {
