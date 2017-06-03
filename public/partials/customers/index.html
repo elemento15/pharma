@@ -1,0 +1,61 @@
+<div class="container-fluid">
+	<h3 class="cls-title">Clientes</h3>
+	
+	<div class="row cls-toolbar">
+		<div class="col-sm-7">
+			<a class="btn btn-primary" href="#/customers-new">Nuevo</a>
+		</div>
+		<div class="col-sm-5">
+			<input type="text" class="form-control" placeholder="Buscar" ng-model="search" ng-change="searchData()" ng-model-options="{updateOn : 'change blur'}">
+		</div>
+	</div>
+
+	<table class="table table-bordered cls-table">
+		<thead>
+			<tr>
+				<th>Actions</th>
+				<th>Nombre</th>
+				<th>RFC</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="(key, rec) in list">
+				<td>
+					<div class="cls-actions">
+						<a class="btn btn-info btn-xs" href="#/customers-edit/{{ rec.id }}">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+						<button class="btn btn-danger btn-xs" ng-click="delete(rec.id)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</div>
+				</td>
+				<td>{{ rec.name  }}</td>
+				<td>{{ rec.rfc }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<nav class="cls-pagination">
+				<ul class="pagination">
+					<li ng-click="paginate('first')">
+						<span aria-hidden="true">&laquo; &laquo;</span>
+					</li>
+					<li ng-click="paginate('previous')">
+						<span aria-hidden="true">&laquo;</span>
+					</li>
+					<li><span>{{ pageInfo }}</span></li>
+					<li ng-click="paginate('next')">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+					<li ng-click="paginate('last')">
+						<span aria-hidden="true">&raquo; &raquo;</span>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+</div>

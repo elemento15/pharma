@@ -1,0 +1,65 @@
+body {
+	background-color: #F6F6F6;
+}
+
+.cls-menu {
+	margin-top: 15px;
+}
+
+.cls-menu a {
+	font-weight: bold;
+	border: 1px solid #DDDDDD;
+	padding: 5px;
+	margin: 0px 5px;
+}
+
+.cls-toolbar {
+	padding: 10px 0px;
+}
+
+.cls-toolbar-gray {
+	background-color: #EEEEEE;
+	padding: 10px 0px;
+}
+
+textarea {
+	resize: none;
+}
+
+h3.cls-title {
+	color: #5D88C3;
+	font-weight: bold;
+	margin: 15px 0px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+table.cls-table thead tr {
+	background-color: #CCCCCC;
+}
+
+table.cls-table tbody td {
+	line-height: 24px;
+}
+
+table.cls-table tbody tr:hover {
+	background-color: #DDE4FF;
+}
+
+table.cls-table tr td .cls-actions {
+	display: none;
+}
+
+table.cls-table tr:hover td .cls-actions {
+	padding: 0px;
+	display: block;
+}
+
+nav.cls-pagination {
+	text-align: right;
+}
+
+ul.pagination {
+	cursor: pointer;
+	margin: 5px 0px;
+}
