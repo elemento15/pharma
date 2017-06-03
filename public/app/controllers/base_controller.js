@@ -3,7 +3,7 @@ function BaseController($scope, $route, $location, ModelService) {
 	var filter = [];
 	var index = me.index || '/';
 	var pagination = {
-		page: 0,
+		page: 1,
 		total: 1,
 		limit: 5
 	};
@@ -41,12 +41,11 @@ function BaseController($scope, $route, $location, ModelService) {
 
 	$scope.read = function () {
 		ModelService.read({
-			start:  pagination.page * pagination.limit,
-			length: pagination.limit,
+			page: pagination.page,
 			filter: filter,
 			search: $scope.search
 		}).success(function (response) {
-			$scope.list = response;
+			$scope.list = response.data;
 			$scope.setPagination(response, pagination);
 		}).error(function (response) {
 			console.log('--- ERROR ---');
@@ -85,30 +84,30 @@ function BaseController($scope, $route, $location, ModelService) {
 	}
 
 	$scope.setPagination = function (data, pagination) {
-		pagination.total = Math.ceil(data.count / pagination.limit);
-		$scope.pageInfo = (pagination.page + 1) +'/'+ pagination.total;
+		pagination.total = data.last_page;
+		$scope.pageInfo = (pagination.page) +'/'+ pagination.total;
 	}
 
 	$scope.paginate = function (type, force) {
 		var data = pagination;
-		var page = data.page;
+		var page = data.current_page;
 
 		switch (type) {
 			case 'first' :
-				data.page = 0;
+				data.page = 1;
 				break;
 			case 'previous' :
-				if (data.page > 0) {
+				if (data.page > 1) {
 					data.page--;
 				}
 				break;
 			case 'next' :
-				if (data.page < data.total - 1) {
+				if (data.page < data.total) {
 					data.page++;
 				}
 				break;
 			case 'last' :
-				data.page = data.total -1;
+				data.page = data.total;
 				break;
 		}
 

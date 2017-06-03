@@ -18,9 +18,16 @@ class CustomersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		return Customer::all();
+		$search = $request->search;
+		$model = new Customer;
+		
+		if ($search) {
+			$model = $model->where('name', 'like', '%'.$search.'%')->where('rfc', 'like', $search.'%');
+		}
+
+		return $model->paginate(5);
 	}
 
 	/**

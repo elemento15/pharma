@@ -7,7 +7,7 @@ app.factory('CustomerService', ['$http', function($http) {
 			return (data.id) ? $http.patch('customers/'+ data.id, data) : $http.post('customers', data);
 		},
 		read   : function(data) {
-			return $http.get('customers', data);
+			return $http.get('customers?'+ jQuery.param(data), data);
 		},
 		delete : function(data) {
 			return $http.delete('customers/'+ data.id);
