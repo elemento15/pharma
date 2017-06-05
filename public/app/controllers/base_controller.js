@@ -1,4 +1,4 @@
-function BaseController($scope, $route, $location, ModelService) {
+function BaseController($scope, $route, $location, ModelService, toastr) {
 	var me = this;
 	var filter = [];
 	var index = me.index || '/';
@@ -30,11 +30,11 @@ function BaseController($scope, $route, $location, ModelService) {
 		if (data) {
 			ModelService.save(data)
 				.success(function(response) {
+					toastr.success('Registro guardado');
 					$location.path(index);
 				})
 				.error(function(response) {
-					console.log('--- ERROR ---');
-					console.log(response);
+					toastr.error(response.msg || 'Error en el servidor');
 				});
 		}
 	}
@@ -48,20 +48,19 @@ function BaseController($scope, $route, $location, ModelService) {
 			$scope.list = response.data;
 			$scope.setPagination(response, pagination);
 		}).error(function (response) {
-			console.log('--- ERROR ---');
-			console.log(response);
+			toastr.error(response.msg || 'Error en el servidor');
 		});
 	}
 
 	$scope.delete = function (id) {
-		if (confirm('Delete record?')) {
+		if (confirm('¿Eliminar registro?')) {
 			ModelService.delete({
 				id: id
 			}).success(function (response) {
+				toastr.success('Registro eliminado');
 				$scope.paginate('first', true);
 			}).error(function (response) {
-				console.log('--- ERROR ---');
-				console.log(response);
+				toastr.error(response.msg || 'Error en el servidor');
 			});
 		}
 	}
@@ -75,7 +74,7 @@ function BaseController($scope, $route, $location, ModelService) {
 		}).success(function(response) {
 			$scope.data = response;
 		}).error(function(response) {
-			alert(response.msg || 'Server responded with error');
+			toastr.error(response.msg || 'Error en el servidor');
 		});
 	}
 
@@ -89,11 +88,10 @@ function BaseController($scope, $route, $location, ModelService) {
 		ModelService.activate({
 			id: record.id
 		}).success(function (response) {
-			record.active = response.data.active;
+			record.active = response.active;
 			record.status_loading = false;
 		}).error(function (response) {
-			console.log('--- ERROR ---');
-			console.log(response);
+			toastr.error(response.msg || 'Error en el servidor');
 			record.status_loading = false;
 		});
 	}
@@ -104,11 +102,10 @@ function BaseController($scope, $route, $location, ModelService) {
 		ModelService.deactivate({
 			id: record.id
 		}).success(function (response) {
-			record.active = response.data.active;
+			record.active = response.active;
 			record.status_loading = false;
 		}).error(function (response) {
-			console.log('--- ERROR ---');
-			console.log(response);
+			toastr.error(response.msg || 'Error en el servidor');
 			record.status_loading = false;
 		});
 	}

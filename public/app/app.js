@@ -1,4 +1,4 @@
-var app = angular.module('mainApp', ['ngRoute']);
+var app = angular.module('mainApp', ['ngRoute', 'toastr']);
 
 app.config(function ($routeProvider, $provide) {
 	$routeProvider

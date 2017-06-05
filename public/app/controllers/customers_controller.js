@@ -1,4 +1,4 @@
-app.controller('CustomersController', function ($scope, $http, $route, $location, CustomerService) {
+app.controller('CustomersController', function ($scope, $http, $route, $location, CustomerService, toastr) {
 	this.index = '/customers';
 	this.title = {
 		new:  'Nuevo Cliente',
@@ -30,5 +30,5 @@ app.controller('CustomersController', function ($scope, $http, $route, $location
 		comments: ''
 	};
 
-	BaseController.call(this, $scope, $route, $location, CustomerService);
+	BaseController.call(this, $scope, $route, $location, CustomerService, toastr);
 });

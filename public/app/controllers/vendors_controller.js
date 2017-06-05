@@ -1,4 +1,4 @@
-app.controller('VendorsController', function ($scope, $http, $route, $location, VendorService) {
+app.controller('VendorsController', function ($scope, $http, $route, $location, VendorService, toastr) {
 	this.index = '/vendors';
 	this.title = {
 		new:  'Nuevo Proveedor',
@@ -30,5 +30,5 @@ app.controller('VendorsController', function ($scope, $http, $route, $location, 
 		comments: ''
 	};
 
-	BaseController.call(this, $scope, $route, $location, VendorService);
+	BaseController.call(this, $scope, $route, $location, VendorService, toastr);
 });

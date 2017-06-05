@@ -1,4 +1,4 @@
-app.controller('ProductsController', function ($scope, $http, $route, $location, ProductService) {
+app.controller('ProductsController', function ($scope, $http, $route, $location, ProductService, toastr) {
 	this.index = '/products';
 	this.title = {
 		new:  'Nuevo Producto',
@@ -24,5 +24,5 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 		comments: ''
 	};
 
-	BaseController.call(this, $scope, $route, $location, ProductService);
+	BaseController.call(this, $scope, $route, $location, ProductService, toastr);
 });
