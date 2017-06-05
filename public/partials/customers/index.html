@@ -14,8 +14,8 @@
 		<thead>
 			<tr>
 				<th width="70">Actions</th>
-				<th>Nombre/Contacto</th>
-				<th>RFC</th>
+				<th>Nombre/RFC</th>
+				<th>Email/Contacto</th>
 				<th>Tel./Cel.</th>
 				<th>&nbsp;</th>
 			</tr>
@@ -34,14 +34,17 @@
 				</td>
 				<td>
 					<div>{{ rec.name  }}</div>
-					<div class="cls-small"><i> {{ rec.contact }}</i></div>
+					<div class="cls-small"><i> {{ rec.rfc }}</i></div>
 				</td>
-				<td>{{ rec.rfc }}</td>
+				<td>
+					<div>{{ rec.email }}</div>
+					<div class="cls-small">{{ rec.contact }}</div>
+				</td>
 				<td>
 					<div class="cls-small">{{ rec.phone }}</div>
 					<div class="cls-small">{{ rec.mobile }}</div>
 				</td>
-				<td>
+				<td align="center">
 					<span class="label label-default" ng-if="rec.active">Activo</span>
 					<span class="label label-warning" ng-if="!rec.active">Inactivo</span>
 				</td>

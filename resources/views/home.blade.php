@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -15,7 +15,6 @@
 
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li><a href="#/">Inicio</a></li>
 				<li><a href="#/customers">Clientes</a></li>
 			</ul>
 
@@ -31,7 +30,7 @@
 	</div>
 </nav>
 
-<div class="container">
+<div class="container cls-main-container">
   <div data-ng-view></div>
 </div>
 
