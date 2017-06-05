@@ -4,30 +4,12 @@
 	<form class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
-				<label>Code:</label>
-				<input type="text" class="form-control" name="code" ng-model="data.code">
+				<label>Descripción:</label>
+				<input type="text" class="form-control" name="name" ng-model="data.description" autocomplete="off">
 			</div>
 
 			<div class="form-group">
-				<label>Description:</label>
-				<input type="text" class="form-control" name="description" ng-model="data.description">
-			</div>
-
-			<div class="form-group">
-				<label>Price:</label>
-				<input type="text" class="form-control" name="price" ng-model="data.price">
-			</div>
-
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" value="1" ng-model="data.active"> Active
-				</label>
-			</div>
-		</div>
-
-		<div class="col-sm-6">
-			<div class="form-group">
-				<label>Comments:</label>
+				<label>Comentarios:</label>
 				<textarea class="form-control" rows="10" ng-model="data.comments"></textarea>
 			</div>
 		</div>
@@ -35,8 +17,8 @@
 
 	<div class="row cls-toolbar-gray">
 		<div class="col-sm-12">
-			<button class="btn btn-primary" ng-click="save()">Save</button>
-			<a class="btn btn-warning" href="#/products-list">Close</a>
+			<button class="btn btn-primary" ng-click="save()">Guardar</button>
+			<a class="btn btn-warning" href="#/products">Cerrar</a>
 		</div>
 	</div>
 </div>

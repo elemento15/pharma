@@ -21,19 +21,48 @@ app.factory('CustomerService', ['$http', function($http) {
 	} 
 }]);
 
+app.factory('VendorService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('vendors/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('vendors/'+ data.id, data) : $http.post('vendors', data);
+		},
+		read     : function(data) {
+			return $http.get('vendors?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('vendors/'+ data.id);
+		},
+		activate : function(data) {
+			return $http.post('vendors/'+ data.id +'/activate');
+		},
+		deactivate : function(data) {
+			return $http.post('vendors/'+ data.id +'/deactivate');
+		}
+	}
+}]);
+
 app.factory('ProductService', ['$http', function($http) {
 	return {
-		get    : function (data) {
-			return $http.post('products/get', data);
+		get      : function (data) {
+			return $http.get('products/'+ data.id);
 		},
-		save   : function (data) {
-			return $http.post('products/save', data);
+		save     : function (data) {
+			return (data.id) ? $http.patch('products/'+ data.id, data) : $http.post('products', data);
 		},
-		read   : function(data) {
-			return $http.post('products/read', data);
+		read     : function(data) {
+			return $http.get('products?'+ jQuery.param(data), data);
 		},
-		delete : function(data) {
-			return $http.post('products/remove', data);
+		delete   : function(data) {
+			return $http.delete('products/'+ data.id);
+		},
+		activate : function(data) {
+			return $http.post('products/'+ data.id +'/activate');
+		},
+		deactivate : function(data) {
+			return $http.post('products/'+ data.id +'/deactivate');
 		}
-	} 
+	}
 }]);

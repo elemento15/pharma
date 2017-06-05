@@ -1,13 +1,13 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Customer;
+use App\Product;
 
 use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CustomersController extends Controller {
+class ProductsController extends Controller {
 
 	public function __construct()
 	{
@@ -22,17 +22,14 @@ class CustomersController extends Controller {
 	public function index(Request $request)
 	{
 		$search = $request->search;
-		$model = new Customer;
+		$model = new Product;
 		
 		if ($search) {
 			$model = $model
-				->where('name', 'like', '%'.$search.'%')
-				->orWhere('rfc', 'like', '%'.$search.'%')
-				->orWhere('contact', 'like', '%'.$search.'%')
-				->orWhere('email', 'like', '%'.$search.'%');
+				->where('description', 'like', '%'.$search.'%');
 		}
 
-		return $model->orderBy('name', 'ASC')->paginate(10);
+		return $model->orderBy('description', 'ASC')->paginate(10);
 	}
 
 	/**
@@ -52,9 +49,7 @@ class CustomersController extends Controller {
 	 */
 	public function store(Request $request)
 	{
-		$request['rfc'] = ($request['rfc'] == '') ? null : $request['rfc'];
-
-		return Customer::create($request->all());
+		return Product::create($request->all());
 	}
 
 	/**
@@ -65,7 +60,7 @@ class CustomersController extends Controller {
 	 */
 	public function show($id)
 	{
-		return Customer::find($id);
+		return Product::find($id);
 	}
 
 	/**
@@ -87,25 +82,16 @@ class CustomersController extends Controller {
 	 */
 	public function update($id, Request $request)
 	{
-		$request['rfc'] = ($request['rfc'] == '') ? null : $request['rfc'];
-
 		$rules = array(
-            'name'       => 'required',
-            'email'      => 'email'
+            'description'       => 'required'
         );
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
         	return 'ERROR';
         } else {
-			$record = Customer::find($id);
-			$record->name = $request->name;
-			$record->rfc = $request->rfc;
-			$record->contact = $request->contact;
-			$record->phone = $request->phone;
-			$record->mobile = $request->mobile;
-			$record->email = $request->email;
-			$record->address = $request->address;
+			$record = Product::find($id);
+			$record->description = $request->description;
 			$record->comments = $request->comments;
 
 			$record->save();
@@ -121,7 +107,7 @@ class CustomersController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$record = Customer::find($id);
+		$record = Product::find($id);
 		if ($record->delete()) {
 			return "Eliminado";
 		} else {
@@ -131,7 +117,7 @@ class CustomersController extends Controller {
 
 	public function activate($id)
 	{
-		$record = Customer::find($id);
+		$record = Product::find($id);
 		$record->active = 1;
 		if ($record->save()) {
 			return Response::json(array('code' => 200, 'data' => $record));
@@ -142,7 +128,7 @@ class CustomersController extends Controller {
 
 	public function deactivate($id)
 	{
-		$record = Customer::find($id);
+		$record = Product::find($id);
 		$record->active = 0;
 		if ($record->save()) {
 			return Response::json(array('code' => 200, 'data' => $record));

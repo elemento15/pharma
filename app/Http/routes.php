@@ -13,11 +13,17 @@
 
 Route::get('/', 'HomeController@index');
 
-// Route::get('home', 'HomeController@index');
-
 Route::resource('customers', 'CustomersController');
 Route::post('customers/{id}/activate', 'CustomersController@activate');
 Route::post('customers/{id}/deactivate', 'CustomersController@deactivate');
+
+Route::resource('vendors', 'VendorsController');
+Route::post('vendors/{id}/activate', 'VendorsController@activate');
+Route::post('vendors/{id}/deactivate', 'VendorsController@deactivate');
+
+Route::resource('products', 'ProductsController');
+Route::post('products/{id}/activate', 'ProductsController@activate');
+Route::post('products/{id}/deactivate', 'ProductsController@deactivate');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

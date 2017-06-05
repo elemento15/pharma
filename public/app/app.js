@@ -7,6 +7,7 @@ app.config(function ($routeProvider, $provide) {
 				controller: 'HomeController',
 				templateUrl: '/partials/home.html'
 			})
+
 		.when('/customers',{
 				controller: 'CustomersController',
 				templateUrl: '/partials/customers/index.html'
@@ -22,7 +23,22 @@ app.config(function ($routeProvider, $provide) {
 				templateUrl: '/partials/customers/edit.html'
 			})
 
-		/*.when('/products-list',{
+		.when('/vendors',{
+				controller: 'VendorsController',
+				templateUrl: '/partials/vendors/index.html'
+			})
+		.when('/vendors-new',
+			{
+				controller: 'VendorsController',
+				templateUrl: '/partials/vendors/edit.html'
+			})
+		.when('/vendors-edit/:id',
+			{
+				controller: 'VendorsController',
+				templateUrl: '/partials/vendors/edit.html'
+			})
+
+		.when('/products',{
 				controller: 'ProductsController',
 				templateUrl: '/partials/products/index.html'
 			})
@@ -35,7 +51,7 @@ app.config(function ($routeProvider, $provide) {
 			{
 				controller: 'ProductsController',
 				templateUrl: '/partials/products/edit.html'
-			})*/
+			})
 
 		.otherwise({ redirectTo: '/' });
 });

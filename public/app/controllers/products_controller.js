@@ -1,20 +1,15 @@
 app.controller('ProductsController', function ($scope, $http, $route, $location, ProductService) {
-	this.index = '/products-list';
+	this.index = '/products';
 	this.title = {
-		new:  'New Product',
-		edit: 'Edit Product'
+		new:  'Nuevo Producto',
+		edit: 'Editar Producto'
 	}
 
 	this.validation = function () {
 		var data = $scope.data;
 
-		if (! data.code) {
-			alert('Code needed');
-			return false;
-		}
-
 		if (! data.description) {
-			alert('Description needed');
+			alert('Descripción requerida');
 			return false;
 		}
 
@@ -23,12 +18,10 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 
 	// model data
 	$scope.data = {
-		id:          0,
-		code:        '',
+		id: 0,
 		description: '',
-		price:       '',
-		active:      '',
-		comments:    ''
+		active: 1,
+		comments: ''
 	};
 
 	BaseController.call(this, $scope, $route, $location, ProductService);

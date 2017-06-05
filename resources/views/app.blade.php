@@ -36,6 +36,7 @@
     <script src="/app/controllers/home_controller.js"></script>
     <script src="/app/controllers/base_controller.js"></script>
     <script src="/app/controllers/customers_controller.js"></script>
+    <script src="/app/controllers/vendors_controller.js"></script>
     <script src="/app/controllers/products_controller.js"></script>
 </body>
 </html>

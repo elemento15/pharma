@@ -1,13 +1,13 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Customer;
+use App\Vendor;
 
 use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CustomersController extends Controller {
+class VendorsController extends Controller {
 
 	public function __construct()
 	{
@@ -22,7 +22,7 @@ class CustomersController extends Controller {
 	public function index(Request $request)
 	{
 		$search = $request->search;
-		$model = new Customer;
+		$model = new Vendor;
 		
 		if ($search) {
 			$model = $model
@@ -53,8 +53,7 @@ class CustomersController extends Controller {
 	public function store(Request $request)
 	{
 		$request['rfc'] = ($request['rfc'] == '') ? null : $request['rfc'];
-
-		return Customer::create($request->all());
+		return Vendor::create($request->all());
 	}
 
 	/**
@@ -65,7 +64,7 @@ class CustomersController extends Controller {
 	 */
 	public function show($id)
 	{
-		return Customer::find($id);
+		return Vendor::find($id);
 	}
 
 	/**
@@ -98,7 +97,7 @@ class CustomersController extends Controller {
         if ($validator->fails()) {
         	return 'ERROR';
         } else {
-			$record = Customer::find($id);
+			$record = Vendor::find($id);
 			$record->name = $request->name;
 			$record->rfc = $request->rfc;
 			$record->contact = $request->contact;
@@ -121,7 +120,7 @@ class CustomersController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$record = Customer::find($id);
+		$record = Vendor::find($id);
 		if ($record->delete()) {
 			return "Eliminado";
 		} else {
@@ -131,7 +130,7 @@ class CustomersController extends Controller {
 
 	public function activate($id)
 	{
-		$record = Customer::find($id);
+		$record = Vendor::find($id);
 		$record->active = 1;
 		if ($record->save()) {
 			return Response::json(array('code' => 200, 'data' => $record));
@@ -142,7 +141,7 @@ class CustomersController extends Controller {
 
 	public function deactivate($id)
 	{
-		$record = Customer::find($id);
+		$record = Vendor::find($id);
 		$record->active = 0;
 		if ($record->save()) {
 			return Response::json(array('code' => 200, 'data' => $record));
