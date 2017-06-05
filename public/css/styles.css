@@ -62,3 +62,7 @@ ul.pagination {
 	cursor: pointer;
 	margin: 5px 0px;
 }
+
+.cls-pointer {
+	cursor: pointer;
+}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Customer;
 
+use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -121,6 +122,28 @@ class CustomersController extends Controller {
 			return "Eliminado";
 		} else {
 			return "Error";
+		}
+	}
+
+	public function activate($id)
+	{
+		$record = Customer::find($id);
+		$record->active = 1;
+		if ($record->save()) {
+			return Response::json(array('code' => 200, 'data' => $record));
+		} else {
+			return Response::json(array('code' => 500, 'msg' => 'No se pudo activar'));
+		}
+	}
+
+	public function deactivate($id)
+	{
+		$record = Customer::find($id);
+		$record->active = 0;
+		if ($record->save()) {
+			return Response::json(array('code' => 200, 'data' => $record));
+		} else {
+			return Response::json(array('code' => 500, 'msg' => 'No se pudo desactivar'));
 		}
 	}
 

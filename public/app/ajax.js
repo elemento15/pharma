@@ -1,16 +1,22 @@
 app.factory('CustomerService', ['$http', function($http) {
 	return {
-		get    : function (data) {
+		get      : function (data) {
 			return $http.get('customers/'+ data.id);
 		},
-		save   : function (data) {
+		save     : function (data) {
 			return (data.id) ? $http.patch('customers/'+ data.id, data) : $http.post('customers', data);
 		},
-		read   : function(data) {
+		read     : function(data) {
 			return $http.get('customers?'+ jQuery.param(data), data);
 		},
-		delete : function(data) {
+		delete   : function(data) {
 			return $http.delete('customers/'+ data.id);
+		},
+		activate : function(data) {
+			return $http.post('customers/'+ data.id +'/activate');
+		},
+		deactivate : function(data) {
+			return $http.post('customers/'+ data.id +'/deactivate');
 		}
 	} 
 }]);

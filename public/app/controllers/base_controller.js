@@ -83,6 +83,36 @@ function BaseController($scope, $route, $location, ModelService) {
 		$scope.paginate('first', true);
 	}
 
+	$scope.setActive = function (record) {
+		record.status_loading = true;
+		
+		ModelService.activate({
+			id: record.id
+		}).success(function (response) {
+			record.active = response.data.active;
+			record.status_loading = false;
+		}).error(function (response) {
+			console.log('--- ERROR ---');
+			console.log(response);
+			record.status_loading = false;
+		});
+	}
+
+	$scope.setInactive = function (record) {
+		record.status_loading = true;
+
+		ModelService.deactivate({
+			id: record.id
+		}).success(function (response) {
+			record.active = response.data.active;
+			record.status_loading = false;
+		}).error(function (response) {
+			console.log('--- ERROR ---');
+			console.log(response);
+			record.status_loading = false;
+		});
+	}
+
 	$scope.setPagination = function (data, pagination) {
 		pagination.total = data.last_page;
 		$scope.pageInfo = (pagination.page) +'/'+ pagination.total;
