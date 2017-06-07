@@ -25,6 +25,8 @@ Route::resource('products', 'ProductsController');
 Route::post('products/{id}/activate', 'ProductsController@activate');
 Route::post('products/{id}/deactivate', 'ProductsController@deactivate');
 
+Route::resource('purchase_orders', 'PurchaseOrdersController');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

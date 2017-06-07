@@ -66,3 +66,26 @@ app.factory('ProductService', ['$http', function($http) {
 		}
 	}
 }]);
+
+app.factory('PurchaseOrderService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('purchase_orders/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('purchase_orders/'+ data.id, data) : $http.post('purchase_orders', data);
+		},
+		read     : function(data) {
+			return $http.get('purchase_orders?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('purchase_orders/'+ data.id);
+		},
+		activate : function(data) {
+			return $http.post('purchase_orders/'+ data.id +'/activate');
+		},
+		deactivate : function(data) {
+			return $http.post('purchase_orders/'+ data.id +'/deactivate');
+		}
+	}
+}]);

@@ -64,6 +64,21 @@ app.config(function ($routeProvider, $provide, toastrConfig) {
 				templateUrl: '/partials/products/edit.html'
 			})
 
+		.when('/purchase-orders',{
+				controller: 'PurchaseOrdersController',
+				templateUrl: '/partials/purchase_orders/index.html'
+			})
+		.when('/purchase-orders-new',
+			{
+				controller: 'PurchaseOrdersController',
+				templateUrl: '/partials/purchase_orders/edit.html'
+			})
+		.when('/purchase-orders-edit/:id',
+			{
+				controller: 'PurchaseOrdersController',
+				templateUrl: '/partials/purchase_orders/edit.html'
+			})
+
 		.otherwise({ redirectTo: '/' });
 
 	// regular expression definitions

@@ -18,6 +18,7 @@
 				<li><a href="#/customers">Clientes</a></li>
 				<li><a href="#/vendors">Proveedores</a></li>
 				<li><a href="#/products">Productos</a></li>
+				<li><a href="#/purchase-orders">Ordenes de Compra</a></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
