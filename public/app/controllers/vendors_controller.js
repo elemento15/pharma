@@ -1,4 +1,4 @@
-app.controller('VendorsController', function ($scope, $http, $route, $location, VendorService, toastr) {
+app.controller('VendorsController', function ($scope, $http, $route, $location, $ngConfirm, VendorService, toastr) {
 	this.index = '/vendors';
 	this.title = {
 		new:  'Nuevo Proveedor',
@@ -7,13 +7,21 @@ app.controller('VendorsController', function ($scope, $http, $route, $location, 
 
 	this.validation = function () {
 		var data = $scope.data;
+		var invalid = false;
 
 		if (! data.name) {
-			alert('Nombre requerido');
-			return false;
+			invalid = toastr.warning('Nombre requerido', 'Validaciones');
 		}
 
-		return data;
+		if (data.rfc && !app.regexpRFC.test(data.rfc)) {
+			invalid = toastr.warning('RFC Inválido', 'Validaciones');
+		}
+
+		if (data.email && !app.regexpEmail.test(data.email)) {
+			invalid = toastr.warning('Email Inválido', 'Validaciones');
+		}
+
+		return (invalid) ? false : data;
 	}
 
 	// model data
@@ -30,5 +38,5 @@ app.controller('VendorsController', function ($scope, $http, $route, $location, 
 		comments: ''
 	};
 
-	BaseController.call(this, $scope, $route, $location, VendorService, toastr);
+	BaseController.call(this, $scope, $route, $location, $ngConfirm, VendorService, toastr);
 });

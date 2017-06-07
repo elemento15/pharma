@@ -1,4 +1,4 @@
-function BaseController($scope, $route, $location, ModelService, toastr) {
+function BaseController($scope, $route, $location, $ngConfirm, ModelService, toastr) {
 	var me = this;
 	var filter = [];
 	var index = me.index || '/';
@@ -53,16 +53,31 @@ function BaseController($scope, $route, $location, ModelService, toastr) {
 	}
 
 	$scope.delete = function (id) {
-		if (confirm('¿Eliminar registro?')) {
-			ModelService.delete({
-				id: id
-			}).success(function (response) {
-				toastr.success('Registro eliminado');
-				$scope.paginate('first', true);
-			}).error(function (response) {
-				toastr.error(response.msg || 'Error en el servidor');
-			});
-		}
+		$ngConfirm({
+			title: 'Eliminar',
+			content: '¿Desea eliminar el registro seleccionado?',
+			type: 'red',
+			buttons: {
+				ok: {
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function () {
+						ModelService.delete({
+							id: id
+						}).success(function (response) {
+							toastr.warning('Registro eliminado');
+							$scope.paginate('first', true);
+						}).error(function (response) {
+							toastr.error(response.msg || 'Error en el servidor');
+						});
+					}
+				},
+				close: {
+					text: 'Omitir',
+					btnClass: 'btn-default'
+				}
+			}
+		});
 	}
 
 	$scope.edit = function (id) {

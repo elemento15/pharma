@@ -1,4 +1,4 @@
-app.controller('ProductsController', function ($scope, $http, $route, $location, ProductService, toastr) {
+app.controller('ProductsController', function ($scope, $http, $route, $location, $ngConfirm, ProductService, toastr) {
 	this.index = '/products';
 	this.title = {
 		new:  'Nuevo Producto',
@@ -7,13 +7,13 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 
 	this.validation = function () {
 		var data = $scope.data;
+		var invalid = false;
 
 		if (! data.description) {
-			alert('Descripción requerida');
-			return false;
+			invalid = toastr.warning('Descripción requerida', 'Validaciones');
 		}
 
-		return data;
+		return (invalid) ? false : data;
 	}
 
 	// model data
@@ -24,5 +24,5 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 		comments: ''
 	};
 
-	BaseController.call(this, $scope, $route, $location, ProductService, toastr);
+	BaseController.call(this, $scope, $route, $location, $ngConfirm, ProductService, toastr);
 });
