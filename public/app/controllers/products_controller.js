@@ -19,6 +19,7 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 	// model data
 	$scope.data = {
 		id: 0,
+		code: '',
 		description: '',
 		active: 1,
 		comments: ''

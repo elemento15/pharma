@@ -13,7 +13,8 @@
 	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th width="100">Acciones</th>
+				<th width="80">Acciones</th>
+				<th>Código</th>
 				<th>Descripción</th>
 				<th width="100" class="text-center">Estado</th>
 			</tr>
@@ -29,6 +30,9 @@
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						</button>
 					</div>
+				</td>
+				<td>
+					<div><i>{{ rec.code  }}</i></div>
 				</td>
 				<td>
 					<div>{{ rec.description  }}</div>

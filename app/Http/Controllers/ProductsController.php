@@ -7,11 +7,11 @@ class ProductsController extends BaseController {
     protected $mainModel = 'App\Product';
 
     // params needen for index
-    protected $searchFields = ['description'];
+    protected $searchFields = ['description', 'code'];
     protected $indexPaginate = 10;
     
     // params needed for store/update
-    protected $defaultNulls = [];
+    protected $defaultNulls = ['code'];
     protected $formRules = [
         'description'  => 'required'
     ];
