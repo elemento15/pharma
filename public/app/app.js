@@ -1,4 +1,4 @@
-var app = angular.module('mainApp', ['ngRoute', 'ui.select', 'toastr', 'cp.ngConfirm']);
+var app = angular.module('mainApp', ['ngRoute', 'ui.bootstrap', 'ui.select', 'toastr', 'cp.ngConfirm']);
 
 app.config(function ($routeProvider, $provide, toastrConfig) {
 	angular.extend(toastrConfig, {

@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/angular-toastr.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/angular-confirm.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/ui-bootstrap-2.5.0-csp.css" />
     <link rel="stylesheet" type="text/css" href="/css/select.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/styles.css" />
 
@@ -35,13 +36,22 @@
 	<script src="/libs/angular-confirm.min.js"></script>
 	<!-- https://github.com/angular-ui/ui-select/wiki -->
 	<script src="/libs/select.min.js"></script>
+	<!-- -->
+	<!--<script src="/libs/ui-bootstrap-2.5.0.min.js"></script>-->
+	<script src="/libs/ui-bootstrap-tpls-2.5.0.min.js"></script>
+
 </head>
 <body>
 	@yield('content')
 
-	<!-- custom scripts -->
+	<!-- general scripts -->
     <script src="/app/app.js"></script>
     <script src="/app/ajax.js"></script>
+
+	<!-- components -->
+    <script src="/app/components/modal_products_search.js"></script>
+    
+	<!-- controllers -->
     <script src="/app/controllers/home_controller.js"></script>
     <script src="/app/controllers/base_controller.js"></script>
     <script src="/app/controllers/customers_controller.js"></script>

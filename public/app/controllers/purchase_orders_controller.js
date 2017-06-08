@@ -1,4 +1,4 @@
-app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $ngConfirm, PurchaseOrderService, ProductService, VendorService, toastr) {
+app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, toastr) {
 	this.index = '/purchase-orders';
 	this.title = {
 		new:  'Nueva Orden de Compra',
@@ -122,6 +122,24 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 		$scope.clearProduct();
 		$('input[ng-model="product.code"]').focus().select();
+	}
+
+	$scope.openSearch = function () {
+		$uibModal.open({
+			// animation: $ctrl.animationsEnabled,
+			ariaLabelledBy: 'modal-title',
+			ariaDescribedBy: 'modal-body',
+			templateUrl: '/partials/templates/modalProducts.html',
+			controller: 'ModalProductsSearch',
+			controllerAs: '$ctrl',
+			// size: size,
+			// appendTo: parentElem,
+			resolve: {
+				items: function () {
+					// return $ctrl.items;
+				}
+			}
+		});
 	}
 
 	$scope.clearProduct = function () {
