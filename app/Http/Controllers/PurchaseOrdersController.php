@@ -35,6 +35,8 @@ class PurchaseOrdersController extends BaseController {
      */
     public function store(Request $request)
     {
+        $total = 0;
+        
         try {
             $purchase = new PurchaseOrder;
             $purchase->vendor_id = $request->vendor_id;
@@ -48,9 +50,13 @@ class PurchaseOrdersController extends BaseController {
                 $detail->quantity = $item['quantity'];
                 $detail->price = $item['price'];
                 $detail->total = $item['quantity'] * $item['price'];
+                $total += $detail->total;
 
                 $purchase->purchase_order_details()->save($detail);
             }
+
+            $purchase->total = $total;
+            $purchase->save();
 
             return $purchase;
 

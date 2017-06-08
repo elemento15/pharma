@@ -16,7 +16,7 @@
 				<th width="80">Acciones</th>
 				<th>Fecha</th>
 				<th>Proveedor</th>
-				<th>Total</th>
+				<th class="text-center">Total</th>
 				<th width="100" class="text-center">Estado</th>
 			</tr>
 		</thead>
@@ -33,14 +33,14 @@
 					</div>
 				</td>
 				<td>
-					<div>{{ rec.order_date }}</div>
+					<div>{{ rec.order_date.substr(0, 10) }}</div>
 				</td>
 				<td>
 					<div>{{ rec.vendor.name }}</div>
 					<div class="cls-small"><i>{{ rec.vendor.rfc }}</i></div>
 				</td>
-				<td>
-					<div>{{ rec.total }}</div>
+				<td align="right">
+					<div>{{ rec.total | currency }}</div>
 				</td>
 				<td align="center">
 					<div ng-hide="rec.status_loading">

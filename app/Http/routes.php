@@ -27,6 +27,8 @@ Route::post('products/{id}/deactivate', 'ProductsController@deactivate');
 Route::post('products/search_code', 'ProductsController@search_code');
 
 Route::resource('purchase_orders', 'PurchaseOrdersController');
+Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');
+Route::post('purchase_orders/{id}/deactivate', 'PurchaseOrdersController@deactivate');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
