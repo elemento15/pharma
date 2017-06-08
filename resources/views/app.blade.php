@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/angular-toastr.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/angular-confirm.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/select.min.css" />
     <link rel="stylesheet" type="text/css" href="/css/styles.css" />
 
 	<!-- Fonts -->
@@ -32,6 +33,8 @@
 	<script src="/libs/angular-toastr.tpls.min.js"></script>
 	<!-- https://craftpip.github.io/angular-confirm/ -->
 	<script src="/libs/angular-confirm.min.js"></script>
+	<!-- https://github.com/angular-ui/ui-select/wiki -->
+	<script src="/libs/select.min.js"></script>
 </head>
 <body>
 	@yield('content')

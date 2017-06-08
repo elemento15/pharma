@@ -63,6 +63,9 @@ app.factory('ProductService', ['$http', function($http) {
 		},
 		deactivate : function(data) {
 			return $http.post('products/'+ data.id +'/deactivate');
+		},
+		search_code : function (code) {
+			return $http.post('products/search_code', code);
 		}
 	}
 }]);

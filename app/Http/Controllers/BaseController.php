@@ -22,6 +22,11 @@ class BaseController extends Controller {
     {
         $search = $request->search;
         $model = new $this->mainModel;
+
+        // set relationships
+        if (isset($this->indexJoins) && count($this->indexJoins)) {
+            $model = $model->with($this->indexJoins);
+        }
         
         if ($search) {
             foreach ($this->searchFields as $key => $field) {
@@ -33,7 +38,15 @@ class BaseController extends Controller {
             }
         }
 
-        return $model->orderBy($this->searchFields[0], 'ASC')->paginate($this->indexPaginate);
+        $model = $model->orderBy($this->searchFields[0], 'ASC');
+
+        if ($request->page) {
+            $model = $model->paginate($this->indexPaginate);
+        } else {
+            $model = $model->get();
+        }
+
+        return $model;
     }
 
     /**
@@ -74,14 +87,19 @@ class BaseController extends Controller {
      */
     public function show($id)
     {
-        $mainModel = $this->mainModel;
-        $record = $mainModel::find($id);
+        $model = $this->mainModel;
+        $model = $model::find($id);
 
-        if ($record) {
-            return $record;
-        } else {
+        if (! $model) {
             return Response::json(array('msg' => 'Registro no encontrado'), 500);
         }
+
+        // relationships
+        if (isset($this->showJoins) && count($this->showJoins)) {
+            $model = $model->load($this->showJoins);
+        }
+
+        return $model;
     }
 
     /**
