@@ -29,6 +29,10 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		purchase_order_details: []
 	};
 
+	$scope.filters = {
+		active: ''
+	}
+
 	$scope.product = {
 		id: 0,
 		code: '',

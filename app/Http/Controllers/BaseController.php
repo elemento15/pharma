@@ -21,21 +21,32 @@ class BaseController extends Controller {
     public function index(Request $request)
     {
         $search = $request->search;
+        $filters = $request->filters;
         $model = new $this->mainModel;
 
         // set relationships
         if (isset($this->indexJoins) && count($this->indexJoins)) {
             $model = $model->with($this->indexJoins);
         }
+
+        if ($filters) {
+            $model = $model->where(function ($query) use ($filters) {
+                foreach ($filters as $item) {
+                    $query = $query->where($item['field'], $item['value']);
+                }
+            });
+        }
         
         if ($search) {
-            foreach ($this->searchFields as $key => $field) {
-                if ($key == 0) {
-                    $model = $model->where($field, 'like', '%'.$search.'%');
-                } else {
-                    $model = $model->orWhere($field, 'like', '%'.$search.'%');
+            $model = $model->where(function ($query) use ($search) {
+                foreach ($this->searchFields as $key => $field) {
+                    if ($key == 0) {
+                        $query = $query->where($field, 'like', '%'.$search.'%');
+                    } else {
+                        $query = $query->orWhere($field, 'like', '%'.$search.'%');
+                    }
                 }
-            }
+            });
         }
 
         $model = $model->orderBy($this->searchFields[0], 'ASC');

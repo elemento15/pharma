@@ -1,6 +1,5 @@
 function BaseController($scope, $route, $location, $ngConfirm, ModelService, toastr) {
 	var me = this;
-	var filter = [];
 	var index = me.index || '/';
 	var pagination = {
 		page: 1,
@@ -42,7 +41,7 @@ function BaseController($scope, $route, $location, $ngConfirm, ModelService, toa
 	$scope.read = function () {
 		ModelService.read({
 			page: pagination.page,
-			filter: filter,
+			filters: $scope.mapFilters(),
 			search: $scope.search
 		}).success(function (response) {
 			$scope.list = response.data;
@@ -94,6 +93,10 @@ function BaseController($scope, $route, $location, $ngConfirm, ModelService, toa
 	}
 
 	$scope.searchData = function () {
+		$scope.paginate('first', true);
+	}
+
+	$scope.changeFilter = function () {
 		$scope.paginate('first', true);
 	}
 
@@ -156,6 +159,21 @@ function BaseController($scope, $route, $location, $ngConfirm, ModelService, toa
 		if (page != data.page || force) {
 			$scope.read(); // read only if page has changed
 		}
+	}
+
+	$scope.mapFilters = function () {
+		var filters = [];
+
+		$.map($scope.filters, function (value, index) {
+			if (value) {
+				filters.push({
+					field: index,
+					value: value
+				});
+			}
+		});
+
+		return filters;
 	}
 
 	$scope.$on('$viewContentLoaded', function (view) {

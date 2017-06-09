@@ -38,5 +38,9 @@ app.controller('VendorsController', function ($scope, $http, $route, $location, 
 		comments: ''
 	};
 
+	$scope.filters = {
+		active: ''
+	}
+
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, VendorService, toastr);
 });

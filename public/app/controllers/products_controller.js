@@ -25,5 +25,9 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 		comments: ''
 	};
 
+	$scope.filters = {
+		active: ''
+	}
+
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, ProductService, toastr);
 });
