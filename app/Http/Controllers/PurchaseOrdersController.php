@@ -17,6 +17,7 @@ class PurchaseOrdersController extends BaseController {
     protected $searchFields = ['order_date'];
     protected $indexPaginate = 10;
     protected $indexJoins = ['vendor'];
+    protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
     protected $showJoins = ['vendor', 'purchase_order_details', 'purchase_order_details.product'];
@@ -26,6 +27,8 @@ class PurchaseOrdersController extends BaseController {
     protected $formRules = [
         'vendor_id'  => 'required'
     ];
+
+    protected $allowDelete = false;
 
 
     /**

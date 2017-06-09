@@ -49,7 +49,10 @@ class BaseController extends Controller {
             });
         }
 
-        $model = $model->orderBy($this->searchFields[0], 'ASC');
+        if (isset($this->orderBy)) {
+            $order = $this->orderBy;
+            $model = $model->orderBy($order['field'], $order['type']);
+        }
 
         if ($request->page) {
             $model = $model->paginate($this->indexPaginate);
@@ -168,6 +171,10 @@ class BaseController extends Controller {
      */
     public function destroy($id)
     {
+        if (! $this->allowDelete) {
+            return Response::json(array('msg' => 'Modelo no permite eliminar'), 500);
+        }
+        
         $mainModel = $this->mainModel;
         
         $record = $mainModel::find($id);

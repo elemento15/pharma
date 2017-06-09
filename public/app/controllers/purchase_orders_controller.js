@@ -9,10 +9,10 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		var data = $scope.data;
 		var invalid = false;
 
-		data.vendor_id = data.vendor.id; // select2
-
-		if (! data.vendor_id) {
+		if (! data.vendor) {
 			invalid = toastr.warning('Proveedor requerido', 'Validaciones');
+		} else {
+			data.vendor_id = data.vendor.id; // select2
 		}
 
 		return (invalid) ? false : data;
@@ -26,7 +26,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		total: 0,
 		active: 1,
 		comments: '',
-		purchase_order_details: []
+		purchase_order_details: [],
+		vendor: null
 	};
 
 	$scope.filters = {
@@ -44,15 +45,15 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 	$scope.vendorsList = [];
 
-	VendorService.read({
-		//page: pagination.page,
-		//filter: filter,
-		//search: $scope.search
-	}).success(function (response) {
-		$scope.vendorsList = response;
-	}).error(function (response) {
-		toastr.error(response.msg || 'Error en el servidor');
-	});
+	$scope.getVendors = function () {
+		VendorService.read({
+			filters: [{ field: 'active', value: 1 }]
+		}).success(function (response) {
+			$scope.vendorsList = response;
+		}).error(function (response) {
+			toastr.error(response.msg || 'Error en el servidor');
+		});
+	}
 
 	$scope.searchCode = function (evt) {
 		var code;
@@ -129,19 +130,21 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	}
 
 	$scope.openSearch = function () {
-		$uibModal.open({
-			// animation: $ctrl.animationsEnabled,
+		var modal = $uibModal.open({
 			ariaLabelledBy: 'modal-title',
 			ariaDescribedBy: 'modal-body',
 			templateUrl: '/partials/templates/modalProducts.html',
 			controller: 'ModalProductsSearch',
 			controllerAs: '$ctrl',
-			// size: size,
-			// appendTo: parentElem,
 			resolve: {
-				items: function () {
-					// return $ctrl.items;
-				}
+				items: function () {}
+			}
+		});
+
+		modal.result.then(function (product) {
+			if (product) {
+				$scope.setProduct(product);
+				$('input[ng-model="product.quantity"]').focus().select();
 			}
 		});
 	}
@@ -162,6 +165,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		$scope.product.total = product.quantity * product.price;
 	}
 
+	$scope.getVendors();
 
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, PurchaseOrderService, toastr);
 });

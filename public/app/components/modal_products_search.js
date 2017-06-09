@@ -1,7 +1,7 @@
 app.controller('ModalProductsSearch', function ($uibModalInstance, items, ProductService) {
   var $ctrl = this;
   
-  var filter = [];
+  var filters = [{ field: 'active', value: 1 }];
   var pagination = {
     page: 1,
     total: 1,
@@ -11,11 +11,13 @@ app.controller('ModalProductsSearch', function ($uibModalInstance, items, Produc
   $ctrl.products = [];
   $ctrl.search = '';
   $ctrl.pageInfo = '1/1';
+  $ctrl.selectedId = null;
+  $ctrl.selection = null;
 
   $ctrl.read = function () {
     ProductService.read({
       page: pagination.page,
-      filter: filter,
+      filters: filters,
       search: $ctrl.search
     }).success(function (response) {
       $ctrl.products = response.data;
@@ -26,13 +28,16 @@ app.controller('ModalProductsSearch', function ($uibModalInstance, items, Produc
   }
 
   $ctrl.ok = function () {
-    // $uibModalInstance.close($ctrl.selected.item);
-    $uibModalInstance.close();
+    $uibModalInstance.close($ctrl.selection);
   };
 
   $ctrl.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
+
+  $ctrl.searchData = function () {
+    $ctrl.paginate('first', true);
+  }
 
   $ctrl.setPagination = function (data, pagination) {
     pagination.total = data.last_page;
@@ -66,6 +71,11 @@ app.controller('ModalProductsSearch', function ($uibModalInstance, items, Produc
       $ctrl.read(); // read only if page has changed
     }
   };
+
+  $ctrl.setSelection = function (record) {
+    $ctrl.selectedId = record.id;
+    $ctrl.selection = record;
+  }
 
   $ctrl.read();
 

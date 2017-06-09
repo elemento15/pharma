@@ -2,6 +2,13 @@
     <h4 class="modal-title" id="modal-title">Busqueda de Productos</h4>
 </div>
 <div class="modal-body" id="modal-body">
+    <div class="row cls-toolbar">
+        <!-- search input -->
+        <div class="col-sm-4">
+            <input type="text" class="form-control" placeholder="Buscar" ng-model="$ctrl.search" ng-change="$ctrl.searchData()" ng-model-options="{updateOn : 'change blur'}">
+        </div>
+    </div>
+
     <table class="table table-bordered table-condensed cls-table">
         <thead>
             <tr>
@@ -10,7 +17,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="product in $ctrl.products">
+            <tr ng-repeat="product in $ctrl.products" 
+                ng-click="$ctrl.setSelection(product)" 
+                ng-dblclick="$ctrl.ok()" 
+                ng-class="{ info : product.id == $ctrl.selectedId }">
                 <td>{{ product.code }}</td>
                 <td>{{ product.description }}</td>
             </tr>

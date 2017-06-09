@@ -55,10 +55,10 @@
 			<input type="text" class="form-control" ng-model="product.description" placeholder="Descripción" style="width:250px">
 		</div>
 		<div class="form-group">
-			<input type="number" class="form-control" ng-model="product.quantity" ng-keypress="getTotalProduct(); setFocus($event, 'price')" placeholder="Cantidad" style="width:85px">
+			<input type="number" class="form-control" ng-model="product.quantity" ng-keypress="getTotalProduct(); setFocus($event, 'price')" placeholder="Cantidad" title="Cantidad" style="width:85px">
 		</div>
 		<div class="form-group">
-			<input type="number" class="form-control" ng-model="product.price" ng-keypress="getTotalProduct(); setFocus($event, 'add')" placeholder="Precio" style="width:85px">
+			<input type="number" class="form-control" ng-model="product.price" ng-keypress="getTotalProduct(); setFocus($event, 'add')" placeholder="Precio" title="Precio" style="width:85px">
 		</div>
 		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

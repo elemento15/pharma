@@ -13,6 +13,7 @@ class ProductsController extends BaseController {
     protected $searchFields = ['description', 'code'];
     protected $indexPaginate = 10;
     protected $indexJoins = [];
+    protected $orderBy = ['field' => 'description', 'type' => 'ASC'];
     
     // params needer for show
     protected $showJoins = [];
@@ -23,6 +24,9 @@ class ProductsController extends BaseController {
         'description'  => 'required'
     ];
 
+    protected $allowDelete = true;
+
+
     /**
      * Display the specified resource.
      *
@@ -32,7 +36,7 @@ class ProductsController extends BaseController {
     public function search_code(Request $request)
     {
     	$code = $request->code;
-    	$product = Product::where('code', $code)->first();
+    	$product = Product::where('code', $code)->where('active', 1)->first();
     	
     	if ($product) {
     		$response = array('success' => true, 'product' => $product);
