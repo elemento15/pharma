@@ -105,3 +105,8 @@ ul.pagination {
 	padding: 5px;
 	height: 28px;
 }
+
+.cls-total-amount {
+	font-size: 18px;
+	color: #ff0000;
+}

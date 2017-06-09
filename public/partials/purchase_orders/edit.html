@@ -75,10 +75,11 @@
 				<th class="text-center">Cantidad</th>
 				<th class="text-center">Precio</th>
 				<th class="text-center">Total</th>
+				<th class="text-center" width="80">Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr data-ng-repeat="(key, detail) in data.purchase_order_details">
+			<tr data-ng-repeat="(key, detail) in data.purchase_order_details" ng-hide="detail._deleted">
 				<td>
 					<div>{{ detail.product.code }}</div>
 					<div class="cls-small">{{ detail.product.description }}</div>
@@ -86,14 +87,24 @@
 				<td align="right">{{ detail.quantity | number }}</td>
 				<td align="right">{{ detail.price | currency }}</td>
 				<td align="right">{{ detail.total | currency }}</td>
+				<td align="center">
+					<div class="cls-actions">
+						<button class="btn btn-danger btn-xs" ng-click="deleteProduct(detail, key)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</div>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 
 	<div class="row cls-toolbar-gray">
-		<div class="col-sm-12">
+		<div class="col-sm-10">
 			<button class="btn btn-primary" ng-click="save()">Guardar</button>
 			<a class="btn btn-warning" href="#/purchase-orders">Cerrar</a>
+		</div>
+		<div class="col-sm-2">
+			<span class="cls-total-amount">{{ data.total | currency }}</span>
 		</div>
 	</div>
 

@@ -127,6 +127,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 		$scope.clearProduct();
 		$('input[ng-model="product.code"]').focus().select();
+
+		$scope.calculateTotal();
 	}
 
 	$scope.openSearch = function () {
@@ -163,6 +165,22 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	$scope.getTotalProduct = function () {
 		var product = $scope.product;
 		$scope.product.total = product.quantity * product.price;
+	}
+
+	$scope.deleteProduct = function (product, key) {
+		$scope.data.purchase_order_details[key]._deleted = true;
+		$scope.calculateTotal()
+	}
+
+	$scope.calculateTotal = function () {
+		var total = 0;
+		$scope.data.purchase_order_details.forEach(function (item) {
+			if (! item._deleted) {
+				total += item.total;
+			}
+		});
+
+		$scope.data.total = total;
 	}
 
 	$scope.getVendors();
