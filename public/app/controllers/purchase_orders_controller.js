@@ -2,7 +2,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	this.index = '/purchase-orders';
 	this.title = {
 		new:  'Nueva Orden de Compra',
-		edit: 'Editar Orden de Compra'
+		edit: 'Orden de Compra: '
 	}
 
 	this.validation = function () {
