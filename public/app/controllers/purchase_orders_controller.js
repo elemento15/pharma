@@ -1,4 +1,4 @@
-app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, toastr) {
+app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, toastr) {
 	this.index = '/purchase-orders';
 	this.title = {
 		new:  'Nueva Orden de Compra',
@@ -68,7 +68,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			}).success(function (response) {
 				if (response.success) {
 					$scope.setProduct(response.product);
-					$('input[ng-model="product.quantity"]').focus().select();
+					$scope.focusQuantity();
 				} else {
 					toastr.warning(response.msg);
 					$scope.clearProduct();
@@ -146,7 +146,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		modal.result.then(function (product) {
 			if (product) {
 				$scope.setProduct(product);
-				$('input[ng-model="product.quantity"]').focus().select();
+				$scope.focusQuantity();
 			}
 		});
 	}
@@ -181,6 +181,12 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		});
 
 		$scope.data.total = total;
+	}
+
+	$scope.focusQuantity = function () {
+		$timeout(function () {
+			$('input[ng-model="product.quantity"]').focus().select();
+	    }, 100);
 	}
 
 	$scope.getVendors();
