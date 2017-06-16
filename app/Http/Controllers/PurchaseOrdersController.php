@@ -48,6 +48,8 @@ class PurchaseOrdersController extends BaseController {
             $purchase->save();
 
             foreach ($request->purchase_order_details as $item) {
+                if (isset($item['_deleted'])) continue;
+
                 $detail = new PurchaseOrderDetail;
                 $detail->product_id = $item['product_id'];
                 $detail->quantity = $item['quantity'];
@@ -76,7 +78,6 @@ class PurchaseOrdersController extends BaseController {
      */
     public function update($id, Request $request)
     {
-
         $rules = $this->formRules;
         $validator = Validator::make($request->all(), $rules);
 
@@ -84,6 +85,7 @@ class PurchaseOrdersController extends BaseController {
             return Response::json(array('msg' => 'Revise las validaciones'), 501);
         } else {
             $purchase = PurchaseOrder::find($id);
+            $total = 0;
 
             if (! $purchase) {
                 return Response::json(array('msg' => 'Orden de Compra inexistente'), 500);
@@ -95,14 +97,37 @@ class PurchaseOrdersController extends BaseController {
                 $purchase->save();
 
                 foreach ($request->purchase_order_details as $item) {
-                    $detail = new PurchaseOrderDetail;
+                    $id_detail = isset($item['id']) ? $item['id'] : 0;
+                    
+                    if ($id_detail) {
+                        $detail = PurchaseOrderDetail::find($item['id']);
+
+                        if (isset($item['_deleted'])) {
+                            $detail->delete();
+                            continue;
+                        }
+
+                    } else {
+                        if (isset($item['_deleted'])) continue;
+                        $detail = new PurchaseOrderDetail;
+                    }
+
                     $detail->product_id = $item['product_id'];
                     $detail->quantity = $item['quantity'];
                     $detail->price = $item['price'];
                     $detail->total = $item['quantity'] * $item['price'];
 
-                    $purchase->purchase_order_details()->save($detail);
+                    if ($id_detail) {
+                        $detail->save();
+                    } else {
+                        $purchase->purchase_order_details()->save($detail);
+                    }
+
+                    $total += $detail->total;
                 }
+
+                $purchase->total = $total;
+                $purchase->save();
 
             } catch (Exception $e) {
                 return Response::json(array('msg' => 'Error al guardar'), 500);
