@@ -66,6 +66,9 @@ app.factory('ProductService', ['$http', function($http) {
 		},
 		search_code : function (code) {
 			return $http.post('products/search_code', code);
+		},
+		get_price : function (data) {
+			return $http.post('products/get_price', data);
 		}
 	}
 }]);

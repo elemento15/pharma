@@ -25,6 +25,7 @@ Route::resource('products', 'ProductsController');
 Route::post('products/{id}/activate', 'ProductsController@activate');
 Route::post('products/{id}/deactivate', 'ProductsController@deactivate');
 Route::post('products/search_code', 'ProductsController@search_code');
+Route::post('products/get_price', 'ProductsController@get_price');
 
 Route::resource('purchase_orders', 'PurchaseOrdersController');
 Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');

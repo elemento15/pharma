@@ -2,6 +2,8 @@
 
 use App\Product;
 
+use Illuminate\Database\Eloquent\Model;
+
 use Response;
 use Illuminate\Http\Request;
 
@@ -45,6 +47,47 @@ class ProductsController extends BaseController {
     	}
 
     	return Response::json($response);
+    }
+
+    /**
+     * Get the price for a product
+     *
+     * @param  int  $id
+     * @param  int  $vendor
+     * @return Response
+     */
+    public function get_price(Request $request)
+    {
+        $product_id = $request->id;
+        $vendor_id = $request->vendor;
+
+        // get the product's price of the last vendor's purchase order
+        $price = \DB::table('purchase_order_details AS det')
+            ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
+            ->where('det.product_id', $product_id)
+            ->where('po.vendor_id', $vendor_id)
+            ->where('po.active', 1)
+            ->orderBy('po.order_date', 'DESC')
+            ->select('price')
+            ->first();
+
+
+        if (! $price) {
+            // get the last product's price (any vendor)
+            $price = \DB::table('purchase_order_details AS det')
+                ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
+                ->where('det.product_id', $product_id)
+                ->where('po.active', 1)
+                ->orderBy('po.order_date', 'DESC')
+                ->select('price')
+                ->first();
+
+            if (! $price) {
+                $price = 0;
+            }
+        }
+
+        return Response::json($price);
     }
 
 }

@@ -68,6 +68,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			}).success(function (response) {
 				if (response.success) {
 					$scope.setProduct(response.product);
+					$scope.getProductPrice(response.product);
 					$scope.focusQuantity();
 				} else {
 					toastr.warning(response.msg);
@@ -146,6 +147,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		modal.result.then(function (product) {
 			if (product) {
 				$scope.setProduct(product);
+				$scope.getProductPrice(product);
 				$scope.focusQuantity();
 			}
 		});
@@ -187,6 +189,17 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		$timeout(function () {
 			$('input[ng-model="product.quantity"]').focus().select();
 	    }, 100);
+	}
+
+	$scope.getProductPrice = function (product) {
+		ProductService.get_price({
+			id: product.id,
+			vendor: $scope.data.vendor.id
+		}).success(function (response) {
+			$scope.product.price = response.price;
+		}).error(function (response) {
+			toastr.error(response.msg || 'Error en el servidor');
+		});
 	}
 
 	$scope.getVendors();
