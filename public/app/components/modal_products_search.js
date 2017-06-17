@@ -9,7 +9,7 @@ app.controller('ModalProductsSearch', function ($uibModalInstance, items, Produc
   };
 
   $ctrl.products = [];
-  $ctrl.search = '';
+  $ctrl.search = items.search;
   $ctrl.pageInfo = '1/1';
   $ctrl.selectedId = null;
   $ctrl.selection = null;

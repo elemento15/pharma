@@ -98,7 +98,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 						$scope.getProductPrice(response.product);
 						$scope.focusQuantity();
 					} else {
-						$scope.openSearch();
+						$scope.openSearch(description);
 					}
 				} else {
 					toastr.warning(response.msg);
@@ -162,7 +162,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		$scope.calculateTotal();
 	}
 
-	$scope.openSearch = function () {
+	$scope.openSearch = function (search) {
 		var modal = $uibModal.open({
 			ariaLabelledBy: 'modal-title',
 			ariaDescribedBy: 'modal-body',
@@ -170,7 +170,11 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			controller: 'ModalProductsSearch',
 			controllerAs: '$ctrl',
 			resolve: {
-				items: function () {}
+				items: function () {
+					return {
+						search: search || ''
+					};
+				}
 			}
 		});
 
