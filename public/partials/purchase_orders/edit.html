@@ -52,24 +52,26 @@
 			<input type="text" class="form-control" ng-model="product.code" ng-keypress="searchCode($event);" placeholder="Código" maxlength="20" style="width:100px">
 		</div>
 		<div class="form-group">
-			<input type="text" class="form-control" ng-model="product.description" placeholder="Descripción" style="width:250px">
+			<input type="text" class="form-control" ng-model="product.description" ng-keypress="searchDescription($event);" placeholder="Descripción" style="width:250px">
 		</div>
-		<div class="form-group">
+		<div class="form-group input-group input-group-sm">
+			<span class="input-group-addon">Cant:</span>
 			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" style="width:85px" 
 				ng-model="product.quantity" 
 				ng-change="getTotalProduct()" 
 				ng-keypress="setFocus($event, 'price')">
 		</div>
-		<div class="form-group">
+		<div class="form-group input-group input-group-sm">
+			<span class="input-group-addon">$</span>
 			<input type="number" class="form-control" placeholder="Precio" title="Precio" style="width:85px" 
 				ng-model="product.price" 
 				ng-change="getTotalProduct()" 
 				ng-keypress="setFocus($event, 'add')">
 		</div>
-		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()">
+		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()" title="Agregar Producto">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 		</button>
-		<button class="btn btn-info btn-xs" id="btnOpenSearch" ng-click="openSearch()">
+		<button class="btn btn-info btn-xs" id="btnOpenSearch" ng-click="openSearch()" title="Abrir Búsqueda">
 			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 		</button>
 	</form>

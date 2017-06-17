@@ -81,6 +81,36 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		}
 	}
 
+	$scope.searchDescription = function (evt) {
+		var description;
+
+		if (evt.keyCode == 13) {
+			evt.preventDefault();
+
+			description = $scope.product.description;
+
+			ProductService.search_description({
+				description: description
+			}).success(function (response) {
+				if (response.success) {
+					if (response.product) {
+						$scope.setProduct(response.product);
+						$scope.getProductPrice(response.product);
+						$scope.focusQuantity();
+					} else {
+						$scope.openSearch();
+					}
+				} else {
+					toastr.warning(response.msg);
+					$scope.clearProduct();
+					$('input[ng-model="product.code"]').focus().select();
+				}
+			}).error(function (response) {
+				toastr.error(response.msg || 'Error en el servidor');
+			});
+		}
+	}
+
 	$scope.setProduct = function (product) {
 		$scope.product = {
 			id: product.id,

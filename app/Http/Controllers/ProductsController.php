@@ -50,6 +50,32 @@ class ProductsController extends BaseController {
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  string  $description
+     * @return Response
+     */
+    public function search_description(Request $request)
+    {
+        $description = $request->description;
+        $product = Product::where('description', 'like', $description.'%')->where('active', 1)->get();
+        
+        if ($product && count($product) > 0) {
+
+            if (count($product) == 1) {
+                $response = array('success' => true, 'product' => $product[0]);
+            } else {
+                $response = array('success' => true, 'product' => false);
+            }
+
+        } else {
+            $response = array('success' => false, 'msg' => 'No se encontro el producto');
+        }
+
+        return Response::json($response);
+    }
+
+    /**
      * Get the price for a product
      *
      * @param  int  $id
