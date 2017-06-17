@@ -63,6 +63,11 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 			code = $scope.product.code;
 
+			if (code == '') {
+				$scope.focusDescription();
+				return false;
+			}
+
 			ProductService.search_code({
 				code: code
 			}).success(function (response) {
@@ -205,7 +210,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 	$scope.deleteProduct = function (product, key) {
 		$scope.data.purchase_order_details[key]._deleted = true;
-		$scope.calculateTotal()
+		$scope.calculateTotal();
+		$scope.focusCode();
 	}
 
 	$scope.calculateTotal = function () {
@@ -222,6 +228,18 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	$scope.focusQuantity = function () {
 		$timeout(function () {
 			$('input[ng-model="product.quantity"]').focus().select();
+	    }, 100);
+	}
+
+	$scope.focusCode = function () {
+		$timeout(function () {
+			$('input[ng-model="product.code"]').focus().select();
+	    }, 100);
+	}
+
+	$scope.focusDescription = function () {
+		$timeout(function () {
+			$('input[ng-model="product.description"]').focus().select();
 	    }, 100);
 	}
 
