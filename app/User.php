@@ -31,4 +31,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+	public function getShortName()
+	{
+		$name = explode(' ', $this->name);
+		
+		return $name[0].' '.$name[1];
+	}
+
 }

@@ -192,6 +192,12 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	}
 
 	$scope.getProductPrice = function (product) {
+		// if no vendor selected, set prico = 0
+		if (! $scope.data.vendor) {
+			$scope.product.price = 0;
+			return false;
+		}
+
 		ProductService.get_price({
 			id: product.id,
 			vendor: $scope.data.vendor.id
