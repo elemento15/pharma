@@ -1,0 +1,96 @@
+<div class="container-fluid">
+	<h3 class="cls-title">Comparativo de Productos</h3>
+
+	<div class="row">
+		<div class="col-sm-9">
+			<table class="table table-condensed table-bordered cls-table">
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<th>Proveedor 1</th>
+						<th>Proveedor 2</th>
+						<th>Proveedor 3</th>
+						<th>Proveedor 4</th>
+						<th>Proveedor 5</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="(key, rec) in list" ng-click="productSelected(rec)">
+						<td>
+							<div><b>{{ rec.code  }}</b></div>
+							<div class="cls-small cls-small-collapsed" style="max-width: 300px;">{{ rec.description }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[0].price | currency }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[1].price | currency }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[2].price | currency }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[3].price | currency }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[4].price | currency }}</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- paginator -->
+			<!--<div class="row">
+				<div class="col-sm-12">
+					<nav class="cls-pagination">
+						<ul class="pagination">
+							<li ng-click="paginate('first')">
+								<span aria-hidden="true">&laquo; &laquo;</span>
+							</li>
+							<li ng-click="paginate('previous')">
+								<span aria-hidden="true">&laquo;</span>
+							</li>-
+							<li><span>{{ pageInfo }}</span></li>
+							<li ng-click="paginate('next')">
+								<span aria-hidden="true">&raquo;</span>
+							</li>
+							<li ng-click="paginate('last')">
+								<span aria-hidden="true">&raquo; &raquo;</span>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>-->
+		</div>
+
+		<div class="col-sm-3">
+			<div class="cls-info-header">Información del Producto</div>
+
+			<div>
+				<span><b>Código:</b></span>&nbsp;
+				<span>{{ selected.code }}</span>
+			</div>
+
+			<div>
+				<span><b>Descripción:</b></span>&nbsp;
+				<span>{{ selected.description }}</span>
+			</div>
+
+			<br>
+
+			<div data-ng-repeat="(key, rec) in selected.columns" class="cls-info-compare">
+				<div class="cls-title">Proveedor {{ key + 1 }}:</div>
+				<div>
+					<span><b>Orden:</b></span>
+					<a href="#/purchase-orders-edit/{{ rec.purchase_order_id }}" target="_blank">{{ rec.purchase_order_id }}</a>&nbsp;&nbsp;&nbsp;
+					<span><i>{{ rec.order_date.substr(0, 10) }}</i></span>
+				</div>
+				<div>
+					<span><b>Proveedor:</b></span>
+					<span class="cls-small">{{ rec.vendor_name }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

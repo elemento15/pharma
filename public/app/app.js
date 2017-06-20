@@ -79,6 +79,18 @@ app.config(function ($routeProvider, $provide, toastrConfig) {
 				templateUrl: '/partials/purchase_orders/edit.html'
 			})
 
+		.when('/products-history',
+			{
+				controller: 'ProductsHistoryController',
+				templateUrl: '/partials/products/history.html'
+			})
+
+		.when('/products-compare',
+			{
+				controller: 'ProductsCompareController',
+				templateUrl: '/partials/products/compare.html'
+			})
+
 		.otherwise({ redirectTo: '/' });
 
 	// regular expression definitions

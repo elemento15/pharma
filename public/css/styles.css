@@ -79,6 +79,12 @@ table td .cls-small {
 	margin-top: 3px;
 }
 
+table td .cls-small-collapsed {
+	line-height: 16px;
+	height: 16px;
+	overflow: hidden;
+}
+
 nav.cls-pagination {
 	text-align: right;
 }
@@ -109,4 +115,24 @@ ul.pagination {
 .cls-total-amount {
 	font-size: 18px;
 	color: #ff0000;
+}
+
+
+.cls-info-header {
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #ccc;
+	padding: 5px;
+	text-align: center;
+	margin-bottom: 5px;
+	border-radius: 5px;
+}
+
+.cls-info-compare {
+	margin-bottom: 10px;
+}
+
+.cls-info-compare .cls-title {
+	font-size: 14px;
+	color: #5d88c3;
 }

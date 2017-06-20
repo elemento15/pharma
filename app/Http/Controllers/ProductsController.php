@@ -116,4 +116,59 @@ class ProductsController extends BaseController {
         return Response::json($price);
     }
 
+    /**
+     * Get the compare rpt for products
+     *
+     * @return Response
+     */
+    public function rpt_compare(Request $request)
+    {
+        
+        $products = Product::where('active', 1)
+            ->orderBy('code', 'ASC')
+            ->get();
+
+        foreach ($products as $key => $product) {
+            $this->columns = [];
+
+            $details = \DB::table('purchase_order_details AS det')
+                ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
+                ->join('vendors AS ven', 'ven.id', '=', 'po.vendor_id')
+                ->where('det.product_id', $product->id)
+                ->orderBy('po.order_date', 'DESC')
+                ->select('purchase_order_id', 'product_id', 'det.quantity', 'det.price', 'det.total', 'order_date', 'vendor_id', 
+                         'ven.name AS vendor_name')
+                ->limit(1000)
+                ->get();
+
+            foreach ($details as $item) {
+                $this->groupByVendor($item);
+            }
+
+            $products[$key]['columns'] = $this->columns;
+        }
+
+        return Response::json($products);
+    }
+
+
+    private function groupByVendor($item)
+    {
+        $exists = false;
+        
+        foreach ($this->columns as $key => $column) {
+            if ($item->vendor_id == $column->vendor_id) {
+                $exists = true;
+                
+                if ($item->order_date > $column->order_date) {
+                    $this->columns[$key] = $item;
+                }
+            }
+        }
+
+        if (!$exists) {
+            $this->columns[] = $item;
+        }
+    }
+
 }

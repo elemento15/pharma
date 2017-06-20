@@ -72,6 +72,9 @@ app.factory('ProductService', ['$http', function($http) {
 		},
 		get_price : function (data) {
 			return $http.post('products/get_price', data);
+		},
+		rpt_compare: function (data) {
+			return $http.post('products/rpt_compare', data);
 		}
 	}
 }]);

@@ -27,6 +27,7 @@ Route::post('products/{id}/deactivate', 'ProductsController@deactivate');
 Route::post('products/search_code', 'ProductsController@search_code');
 Route::post('products/search_description', 'ProductsController@search_description');
 Route::post('products/get_price', 'ProductsController@get_price');
+Route::post('products/rpt_compare', 'ProductsController@rpt_compare');
 
 Route::resource('purchase_orders', 'PurchaseOrdersController');
 Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');

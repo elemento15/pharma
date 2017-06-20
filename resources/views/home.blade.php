@@ -15,9 +15,25 @@
 
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-				<li><a href="#/customers">Clientes</a></li>
-				<li><a href="#/vendors">Proveedores</a></li>
-				<li><a href="#/products">Productos</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Catálogos <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#/customers">Clientes</a></li>
+						<li><a href="#/vendors">Proveedores</a></li>
+						<li><a href="#/products">Productos</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Reportes <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="#/products-compare">Comparativo de Productos</a></li>
+						<li><a href="#/products-history">Historial de Productos</a></li>
+					</ul>
+				</li>
 				<li><a href="#/purchase-orders">Ordenes de Compra</a></li>
 			</ul>
 
