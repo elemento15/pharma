@@ -31,7 +31,7 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="#/products-compare">Comparativo de Productos</a></li>
-						<li><a href="#/products-history">Historial de Productos</a></li>
+						<!--<li><a href="#/products-history">Historial de Productos</a></li>-->
 					</ul>
 				</li>
 				<li><a href="#/purchase-orders">Ordenes de Compra</a></li>
