@@ -123,27 +123,39 @@ class ProductsController extends BaseController {
      */
     public function rpt_compare(Request $request)
     {
-        
-        $products = Product::where('active', 1)
-            ->orderBy('code', 'ASC')
-            ->get();
+        $search = $request->search;
+        $order = $request->order;
+
+        $products = Product::where('active', 1)->where('worked', 1);
+
+        if ($search) {
+            $products = $products->where(function ($q) use ($search) {
+                $q->where('code', 'like', '%'.$search.'%')->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
+        $order = ($order == 'C') ? 'code' : 'description';
+        $products = $products->orderBy($order, 'ASC')->paginate(10);
+
 
         foreach ($products as $key => $product) {
-            $this->columns = [];
+            $this->columns = array();
 
             $details = \DB::table('purchase_order_details AS det')
                 ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
                 ->join('vendors AS ven', 'ven.id', '=', 'po.vendor_id')
                 ->where('det.product_id', $product->id)
+                ->where('po.active', 1)
                 ->orderBy('po.order_date', 'DESC')
-                ->select('purchase_order_id', 'product_id', 'det.quantity', 'det.price', 'det.total', 'order_date', 'vendor_id', 
-                         'ven.name AS vendor_name')
+                ->select('det.id', 'purchase_order_id', 'product_id', 'det.quantity', 'det.price', 'det.total', 
+                         'order_date', 'vendor_id', 'ven.name AS vendor_name')
                 ->limit(1000)
                 ->get();
 
             foreach ($details as $item) {
                 $this->groupByVendor($item);
             }
+            $this->orderByPrice();
 
             $products[$key]['columns'] = $this->columns;
         }
@@ -169,6 +181,29 @@ class ProductsController extends BaseController {
         if (!$exists) {
             $this->columns[] = $item;
         }
+    }
+
+    private function orderByPrice()
+    {
+        $order = array();
+        $result = array();
+
+        foreach ($this->columns as $key => $item) {
+            $order[$item->id] = $item->price;
+        }
+
+        asort($order);
+
+        foreach ($order as $key => $item) {
+            foreach ($this->columns as $column) {
+                if ($column->id == $key) {
+                    $result[] = $column;
+                    break;
+                }
+            }
+        }
+
+        $this->columns = $result;
     }
 
 }

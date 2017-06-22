@@ -11,4 +11,10 @@ class Product extends Model {
 		return $this->hasMany('App\PurchaseOrderDetail');
 	}
 
+	public function scopeSetWorked($query)
+	{
+		$this->worked = 1;
+		$this->save();
+	}
+
 }

@@ -3,6 +3,30 @@
 
 	<div class="row">
 		<div class="col-sm-9">
+			<div class="row cls-toolbar">
+				<div class="col-sm-2">
+					<button class="btn btn-primary btn-sm" ng-click="searchData()">Actualizar</button>
+				</div>
+
+				<!-- order -->
+				<div class="col-sm-6">
+					<div class="form-inline">
+						<div class="form-group">
+							<label>Ordenar:</label>
+							<select class="form-control" ng-model="orderBy" ng-change="searchData()">
+								<option value="C">Codigo</option>
+								<option value="D">Descripción</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<!-- search input -->
+				<div class="col-sm-4">
+					<input type="text" class="form-control" placeholder="Buscar" ng-model="search" ng-change="searchData()" ng-model-options="{updateOn : 'change blur'}">
+				</div>
+			</div>
+
 			<table class="table table-condensed table-bordered cls-table">
 				<thead>
 					<tr>
@@ -15,7 +39,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="(key, rec) in list" ng-click="productSelected(rec)">
+					<tr data-ng-repeat="(key, rec) in list" ng-click="productSelected(rec, key)" ng-class="{ 'success' : (key == keySelected) }">
 						<td>
 							<div><b>{{ rec.code  }}</b></div>
 							<div class="cls-small cls-small-collapsed" style="max-width: 300px;">{{ rec.description }}</div>
@@ -40,7 +64,7 @@
 			</table>
 
 			<!-- paginator -->
-			<!--<div class="row">
+			<div class="row">
 				<div class="col-sm-12">
 					<nav class="cls-pagination">
 						<ul class="pagination">
@@ -60,20 +84,22 @@
 						</ul>
 					</nav>
 				</div>
-			</div>-->
+			</div>
 		</div>
 
 		<div class="col-sm-3">
 			<div class="cls-info-header">Información del Producto</div>
 
 			<div>
-				<span><b>Código:</b></span>&nbsp;
-				<span>{{ selected.code }}</span>
+				<span><i>Código:</i></span>&nbsp;
+				<span>
+					<b><a href="#/products-edit/{{selected.id}}" target="_blank">{{ selected.code }}</a></b>
+				</span>
 			</div>
 
 			<div>
-				<span><b>Descripción:</b></span>&nbsp;
-				<span>{{ selected.description }}</span>
+				<span class="cls-small"><i>Descripción:</i></span>&nbsp;
+				<span class="cls-small">{{ selected.description }}</span>
 			</div>
 
 			<br>
@@ -82,7 +108,7 @@
 				<div class="cls-title">Proveedor {{ key + 1 }}:</div>
 				<div>
 					<span><b>Orden:</b></span>
-					<a href="#/purchase-orders-edit/{{ rec.purchase_order_id }}" target="_blank">{{ rec.purchase_order_id }}</a>&nbsp;&nbsp;&nbsp;
+					<a href="#/purchase-orders-edit/{{ rec.purchase_order_id }}" target="_blank"><b>{{ rec.purchase_order_id }}</b></a>&nbsp;&nbsp;&nbsp;
 					<span><i>{{ rec.order_date.substr(0, 10) }}</i></span>
 				</div>
 				<div>

@@ -2,6 +2,7 @@
 
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
+use App\Product;
 
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,7 @@ class PurchaseOrdersController extends BaseController {
     protected $mainModel = 'App\PurchaseOrder';
 
     // params needen for index
-    protected $searchFields = ['order_date'];
+    protected $searchFields = ['id'];
     protected $indexPaginate = 10;
     protected $indexJoins = ['vendor'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
@@ -58,6 +59,10 @@ class PurchaseOrdersController extends BaseController {
                 $total += $detail->total;
 
                 $purchase->purchase_order_details()->save($detail);
+
+                // mark product as worked
+                $product = Product::find($item['product_id']);
+                $product->setWorked();
             }
 
             $purchase->total = $total;
@@ -110,6 +115,10 @@ class PurchaseOrdersController extends BaseController {
                     } else {
                         if (isset($item['_deleted'])) continue;
                         $detail = new PurchaseOrderDetail;
+
+                        // mark product as worked
+                        $product = Product::find($item['product_id']);
+                        $product->setWorked();
                     }
 
                     $detail->product_id = $item['product_id'];
