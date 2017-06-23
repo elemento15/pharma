@@ -16,4 +16,9 @@ class PurchaseOrder extends Model {
 		return $this->belongsTo('App\Vendor');
 	}
 
+	public function status()
+	{
+		return $this->belongsTo('App\Status');
+	}
+
 }

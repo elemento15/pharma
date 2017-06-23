@@ -17,11 +17,11 @@ class PurchaseOrdersController extends BaseController {
     // params needen for index
     protected $searchFields = ['id'];
     protected $indexPaginate = 10;
-    protected $indexJoins = ['vendor'];
+    protected $indexJoins = ['vendor', 'status'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
-    protected $showJoins = ['vendor', 'purchase_order_details', 'purchase_order_details.product'];
+    protected $showJoins = ['vendor', 'status', 'purchase_order_details', 'purchase_order_details.product'];
     
     // params needed for store/update
     protected $defaultNulls = [];

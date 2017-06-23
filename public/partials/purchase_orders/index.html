@@ -7,7 +7,7 @@
 		</div>
 
 		<!-- filters -->
-		<div class="col-sm-6">
+		<div class="col-sm-3">
 			<div class="form-inline">
 				<div class="form-group">
 					<label>Estado:</label>
@@ -15,6 +15,18 @@
 						<option value="">(Todos)</option>
 						<option value="1">Activos</option>
 						<option value="0">Inactivos</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3">
+			<div class="form-inline">
+				<div class="form-group">
+					<label>Status:</label>
+					<select class="form-control" ng-model="filters.status_id" ng-change="changeFilter()">
+						<option value="">(Todos)</option>
+						<option ng-repeat="item in statusList" value="{{item.id}}">{{ item.name }}</option>
 					</select>
 				</div>
 			</div>
@@ -34,6 +46,7 @@
 				<th width="80">Fecha</th>
 				<th>Proveedor</th>
 				<th class="text-center">Total</th>
+				<th width="80" class="text-center">Status</th>
 				<th width="80" class="text-center">Estado</th>
 			</tr>
 		</thead>
@@ -59,6 +72,11 @@
 				</td>
 				<td align="right">
 					<div>{{ rec.total | currency }}</div>
+				</td>
+				<td align="center">
+					<span class="label label-info" ng-show="rec.status.is_default">{{ rec.status.name }}</span>
+					<span class="label label-warning" ng-hide="rec.status.is_default || rec.status.is_final">{{ rec.status.name }}</span>
+					<span class="cls-small" ng-show="rec.status.is_final">{{ rec.status.name }}</span>
 				</td>
 				<td align="center">
 					<div ng-hide="rec.status_loading">

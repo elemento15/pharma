@@ -33,6 +33,8 @@ Route::resource('purchase_orders', 'PurchaseOrdersController');
 Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');
 Route::post('purchase_orders/{id}/deactivate', 'PurchaseOrdersController@deactivate');
 
+Route::resource('statuses', 'StatusesController');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

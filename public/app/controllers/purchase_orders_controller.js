@@ -1,4 +1,4 @@
-app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, toastr) {
+app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, StatusService, toastr) {
 	this.index = '/purchase-orders';
 	this.title = {
 		new:  'Nueva Orden de Compra',
@@ -22,16 +22,19 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	$scope.data = {
 		id:        0,
 		vendor_id: '',
+		status_id: '',
 		order_date: '',
 		total: 0,
 		active: 1,
 		comments: '',
 		purchase_order_details: [],
-		vendor: null
+		vendor: null,
+		status: null
 	};
 
 	$scope.filters = {
-		active: ''
+		active: '',
+		status_id: ''
 	}
 
 	$scope.product = {
@@ -44,12 +47,23 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	};
 
 	$scope.vendorsList = [];
+	$scope.statusList = [];
 
 	$scope.getVendors = function () {
 		VendorService.read({
 			filters: [{ field: 'active', value: 1 }]
 		}).success(function (response) {
 			$scope.vendorsList = response;
+		}).error(function (response) {
+			toastr.error(response.msg || 'Error en el servidor');
+		});
+	}
+
+	$scope.getStatuses = function () {
+		StatusService.read({
+			filters: [{ field: 'type', value: 'PO' }]
+		}).success(function (response) {
+			$scope.statusList = response;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -261,6 +275,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	}
 
 	$scope.getVendors();
+	$scope.getStatuses();
 
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, PurchaseOrderService, toastr);
 });

@@ -101,3 +101,14 @@ app.factory('PurchaseOrderService', ['$http', function($http) {
 		}
 	}
 }]);
+
+app.factory('StatusService', ['$http', function($http) {
+	return {
+		get  : function (data) {
+			return $http.get('statuses/'+ data.id);
+		},
+		read : function(data) {
+			return $http.get('statuses?'+ jQuery.param(data), data);
+		}
+	}
+}]);
