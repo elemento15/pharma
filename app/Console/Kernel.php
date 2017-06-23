@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		'App\Console\Commands\Inspire',
+		'App\Console\Commands\SetWorkedProductsCommand',
+		'App\Console\Commands\SetDetailsStatusCommand',
 	];
 
 	/**
