@@ -53,4 +53,7 @@
   <div data-ng-view></div>
 </div>
 
+<br>
+<br>
+
 @endsection

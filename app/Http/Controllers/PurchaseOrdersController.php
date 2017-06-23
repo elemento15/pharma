@@ -146,4 +146,28 @@ class PurchaseOrdersController extends BaseController {
         }
     }
 
+    /**
+     * Change status to purchase order.
+     *
+     * @param  int  $id
+     * @param  int  $status_id
+     * @return Response
+     */
+    public function change_status($id, Request $request)
+    {
+        $record = PurchaseOrder::find($id);
+
+        if (! $record) {
+            return Response::json(array('msg' => 'Registro no encontrado'), 500);
+        }
+
+        $record->status_id = $request->status;
+        
+        if ($record->save()) {
+            return Response::json($record->status()->first());
+        } else {
+            return Response::json(array('msg' => 'Error al activar'), 500);
+        }
+    }
+
 }

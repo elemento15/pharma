@@ -274,6 +274,42 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		});
 	}
 
+	$scope.openChangeStatus = function (order) {
+		var modal = $uibModal.open({
+			ariaLabelledBy: 'modal-title',
+			ariaDescribedBy: 'modal-body',
+			templateUrl: '/partials/templates/modalChangeStatus.html',
+			controller: 'ModalChangeStatus',
+			controllerAs: '$ctrl',
+			size: 'sm',
+			resolve: {
+				items: function () {
+					return {
+						statusList: $scope.statusList
+					};
+				}
+			}
+		});
+
+		modal.result.then(function (status) {
+			if (status) {
+				$scope.changeStatus(order, status);
+			}
+		});
+	}
+
+	$scope.changeStatus = function (order, status) {
+		PurchaseOrderService.change_status({
+			id: order.id,
+			status: status.id
+		}).success(function (response) {
+			order.status_id = response.id;
+			order.status = response;
+		}).error(function (response) {
+			toastr.error(response.msg || 'Error en el servidor');
+		});
+	}
+
 	$scope.getVendors();
 	$scope.getStatuses();
 

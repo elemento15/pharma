@@ -98,6 +98,9 @@ app.factory('PurchaseOrderService', ['$http', function($http) {
 		},
 		deactivate : function(data) {
 			return $http.post('purchase_orders/'+ data.id +'/deactivate');
+		},
+		change_status : function (data) {
+			return $http.post('purchase_orders/'+ data.id +'/change_status', data);
 		}
 	}
 }]);

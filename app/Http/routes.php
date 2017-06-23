@@ -32,6 +32,7 @@ Route::post('products/rpt_compare', 'ProductsController@rpt_compare');
 Route::resource('purchase_orders', 'PurchaseOrdersController');
 Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');
 Route::post('purchase_orders/{id}/deactivate', 'PurchaseOrdersController@deactivate');
+Route::post('purchase_orders/{id}/change_status', 'PurchaseOrdersController@change_status');
 
 Route::resource('statuses', 'StatusesController');
 
