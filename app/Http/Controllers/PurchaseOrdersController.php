@@ -3,6 +3,7 @@
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
 use App\Product;
+use App\Status;
 
 use App\Http\Controllers\Controller;
 
@@ -40,12 +41,16 @@ class PurchaseOrdersController extends BaseController {
     public function store(Request $request)
     {
         $total = 0;
+
+        // get default status for new purchase order
+        $status = Status::where('type', 'PO')->where('is_default', 1)->first();
         
         try {
             $purchase = new PurchaseOrder;
             $purchase->vendor_id = $request->vendor_id;
             $purchase->comments = $request->comments;
             $purchase->order_date = date('Y-m-d H:i:s');
+            $purchase->status_id = $status->id;
             $purchase->save();
 
             foreach ($request->purchase_order_details as $item) {
