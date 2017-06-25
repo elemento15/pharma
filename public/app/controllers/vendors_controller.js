@@ -33,6 +33,7 @@ app.controller('VendorsController', function ($scope, $http, $route, $location, 
 		phone: '',
 		mobile: '',
 		email: '',
+		credit_conditions: '',
 		address: '',
 		active: 1,
 		comments: ''

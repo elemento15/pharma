@@ -105,15 +105,31 @@
 			<br>
 
 			<div data-ng-repeat="(key, rec) in selected.columns" class="cls-info-compare">
-				<div class="cls-title">Proveedor {{ key + 1 }}:</div>
 				<div>
-					<span><b>Orden:</b></span>
-					<a href="#/purchase-orders-edit/{{ rec.purchase_order_id }}" target="_blank"><b>{{ rec.purchase_order_id }}</b></a>&nbsp;&nbsp;&nbsp;
-					<span><i>{{ rec.order_date.substr(0, 10) }}</i></span>
+					<span class="cls-title">Proveedor {{ key + 1 }}:</span>&nbsp;&nbsp;
+					<span class="text-right"><i>{{ rec.price | currency }}</i></span>
 				</div>
 				<div>
-					<span><b>Proveedor:</b></span>
-					<span class="cls-small">{{ rec.vendor_name }}</span>
+					<span class="cls-small"><b>Proveedor:</b></span>
+					<span class="cls-small">
+						<a href="#/vendors-edit/{{rec.vendor_id}}" target="_blank">{{ rec.vendor_name }}</a>
+					</span>
+				</div>
+				<div ng-show="rec.contact">
+					<span class="cls-small"><b>Contacto:</b></span>
+					<span class="cls-small">{{ rec.contact }}</span>
+				</div>
+				<div ng-show="rec.phone">
+					<span class="cls-small"><b>Teléfono:</b></span>
+					<span class="cls-small">{{ rec.phone }}</span>
+				</div>
+				<div ng-show="rec.mobile">
+					<span class="cls-small"><b>Celular:</b></span>
+					<span class="cls-small">{{ rec.mobile }}</span>
+				</div>
+				<div ng-show="rec.credit_conditions">
+					<span class="cls-small"><b>Condiciones de Crédito:</b></span>
+					<span class="cls-small">{{ rec.credit_conditions }}</span>
 				</div>
 			</div>
 		</div>

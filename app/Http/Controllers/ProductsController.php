@@ -151,7 +151,8 @@ class ProductsController extends BaseController {
             $details = \DB::table('vendor_prices AS vp')
                 ->join('vendors AS ven', 'ven.id', '=', 'vp.vendor_id')
                 ->where('vp.product_id', $product->id)
-                ->select('vp.id', 'vp.price', 'vp.vendor_id', 'ven.name AS vendor_name')
+                ->select('vp.id', 'vp.price', 'vp.vendor_id', 'ven.name AS vendor_name', 
+                         'contact', 'phone', 'mobile', 'credit_conditions')
                 ->get();
 
             foreach ($details as $item) {
