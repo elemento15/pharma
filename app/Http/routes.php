@@ -36,6 +36,8 @@ Route::post('purchase_orders/{id}/change_status', 'PurchaseOrdersController@chan
 
 Route::resource('statuses', 'StatusesController');
 
+Route::resource('vendor_prices', 'VendorPricesController');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

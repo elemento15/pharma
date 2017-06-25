@@ -57,6 +57,7 @@
     <script src="/app/controllers/base_controller.js"></script>
     <script src="/app/controllers/customers_controller.js"></script>
     <script src="/app/controllers/vendors_controller.js"></script>
+    <script src="/app/controllers/vendors_prices_controller.js"></script>
     <script src="/app/controllers/products_controller.js"></script>
     <script src="/app/controllers/products_history_controller.js"></script>
     <script src="/app/controllers/products_compare_controller.js"></script>

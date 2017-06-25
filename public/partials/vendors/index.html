@@ -29,7 +29,7 @@
 	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th width="78">Acciones</th>
+				<th width="95">Acciones</th>
 				<th>Nombre/RFC</th>
 				<th>Email/Contacto</th>
 				<th>Tel./Cel.</th>
@@ -46,6 +46,9 @@
 						<button class="btn btn-danger btn-xs" ng-click="delete(rec.id)">
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						</button>
+						<a class="btn btn-primary btn-xs" href="#/vendors-prices/{{ rec.id }}">
+							<span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+						</a>
 					</div>
 				</td>
 				<td>

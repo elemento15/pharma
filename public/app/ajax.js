@@ -44,6 +44,23 @@ app.factory('VendorService', ['$http', function($http) {
 	}
 }]);
 
+app.factory('VendorPriceService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('vendor_prices/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('vendor_prices/'+ data.id, data) : $http.post('vendor_prices', data);
+		},
+		read     : function(data) {
+			return $http.get('vendor_prices?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('vendor_prices/'+ data.id);
+		}
+	}
+}]);
+
 app.factory('ProductService', ['$http', function($http) {
 	return {
 		get      : function (data) {

@@ -48,6 +48,11 @@ app.config(function ($routeProvider, $provide, toastrConfig) {
 				controller: 'VendorsController',
 				templateUrl: '/partials/vendors/edit.html'
 			})
+		.when('/vendors-prices/:id',
+			{
+				controller: 'VendorsPricesController',
+				templateUrl: '/partials/vendors/prices.html'
+			})
 
 		.when('/products',{
 				controller: 'ProductsController',
