@@ -2,8 +2,9 @@
 
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
-use App\Product;
+// use App\Product;
 use App\Status;
+use App\VendorPrice;
 
 use App\Http\Controllers\Controller;
 
@@ -66,8 +67,11 @@ class PurchaseOrdersController extends BaseController {
                 $purchase->purchase_order_details()->save($detail);
 
                 // mark product as worked
-                $product = Product::find($item['product_id']);
-                $product->setWorked();
+                // $product = Product::find($item['product_id']);
+                // $product->setWorked();
+
+                // update vendor price
+                $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
             }
 
             $purchase->total = $total;
@@ -122,8 +126,11 @@ class PurchaseOrdersController extends BaseController {
                         $detail = new PurchaseOrderDetail;
 
                         // mark product as worked
-                        $product = Product::find($item['product_id']);
-                        $product->setWorked();
+                        // $product = Product::find($item['product_id']);
+                        // $product->setWorked();
+
+                        // update vendor price
+                        $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
                     }
 
                     $detail->product_id = $item['product_id'];
@@ -172,6 +179,23 @@ class PurchaseOrdersController extends BaseController {
             return Response::json($record->status()->first());
         } else {
             return Response::json(array('msg' => 'Error al activar'), 500);
+        }
+    }
+
+
+    private function updateVendorPrice($product_id, $vendor_id, $price)
+    {
+        $vendor_price = VendorPrice::where('vendor_id', $vendor_id)->where('product_id', $product_id)->first();
+        
+        if ($vendor_price) {
+            $vendor_price->price = $price;
+            $vendor_price->save();
+        } else {
+            $vendor_price = new VendorPrice;
+            $vendor_price->vendor_id = $vendor_id;
+            $vendor_price->product_id = $product_id;
+            $vendor_price->price = $price;
+            $vendor_price->save();
         }
     }
 

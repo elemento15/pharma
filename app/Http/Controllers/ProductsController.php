@@ -88,18 +88,25 @@ class ProductsController extends BaseController {
         $vendor_id = $request->vendor;
 
         // get the product's price of the last vendor's purchase order
-        $price = \DB::table('purchase_order_details AS det')
+        /*$price = \DB::table('purchase_order_details AS det')
             ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
             ->where('det.product_id', $product_id)
             ->where('po.vendor_id', $vendor_id)
             ->where('po.active', 1)
             ->orderBy('po.order_date', 'DESC')
             ->select('price')
+            ->first();*/
+        
+        // get the vendor's price
+        $price = \DB::table('vendor_prices AS vp')
+            ->where('vendor_id', $vendor_id)
+            ->where('product_id', $product_id)
+            ->select('price')
             ->first();
 
 
         if (! $price) {
-            // get the last product's price (any vendor)
+            // get the last product's price (last any vendor's purchase order)
             $price = \DB::table('purchase_order_details AS det')
                 ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
                 ->where('det.product_id', $product_id)
