@@ -126,7 +126,7 @@ class ProductsController extends BaseController {
         $search = $request->search;
         $order = $request->order;
 
-        $products = Product::where('active', 1)->where('worked', 1);
+        $products = Product::where('active', 1);
 
         if ($search) {
             $products = $products->where(function ($q) use ($search) {
@@ -141,19 +141,14 @@ class ProductsController extends BaseController {
         foreach ($products as $key => $product) {
             $this->columns = array();
 
-            $details = \DB::table('purchase_order_details AS det')
-                ->join('purchase_orders AS po', 'po.id', '=', 'det.purchase_order_id')
-                ->join('vendors AS ven', 'ven.id', '=', 'po.vendor_id')
-                ->where('det.product_id', $product->id)
-                ->where('po.active', 1)
-                ->orderBy('po.order_date', 'DESC')
-                ->select('det.id', 'purchase_order_id', 'product_id', 'det.quantity', 'det.price', 'det.total', 
-                         'order_date', 'vendor_id', 'ven.name AS vendor_name')
-                ->limit(1000)
+            $details = \DB::table('vendor_prices AS vp')
+                ->join('vendors AS ven', 'ven.id', '=', 'vp.vendor_id')
+                ->where('vp.product_id', $product->id)
+                ->select('vp.id', 'vp.price', 'vp.vendor_id', 'ven.name AS vendor_name')
                 ->get();
 
             foreach ($details as $item) {
-                $this->groupByVendor($item);
+                $this->columns[] = $item;
             }
             $this->orderByPrice();
 
@@ -163,38 +158,18 @@ class ProductsController extends BaseController {
         return Response::json($products);
     }
 
-
-    private function groupByVendor($item)
-    {
-        $exists = false;
-        
-        foreach ($this->columns as $key => $column) {
-            if ($item->vendor_id == $column->vendor_id) {
-                $exists = true;
-                
-                if ($item->order_date > $column->order_date) {
-                    $this->columns[$key] = $item;
-                }
-            }
-        }
-
-        if (!$exists) {
-            $this->columns[] = $item;
-        }
-    }
-
     private function orderByPrice()
     {
-        $order = array();
+        $price = array();
         $result = array();
 
         foreach ($this->columns as $key => $item) {
-            $order[$item->id] = $item->price;
+            $price[$item->id] = $item->price;
         }
 
-        asort($order);
+        asort($price);
 
-        foreach ($order as $key => $item) {
+        foreach ($price as $key => $item) {
             foreach ($this->columns as $column) {
                 if ($column->id == $key) {
                     $result[] = $column;
