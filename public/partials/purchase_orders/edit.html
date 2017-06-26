@@ -82,17 +82,18 @@
 	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th>Producto</th>
-				<th class="text-center">Cantidad</th>
-				<th class="text-center">Precio</th>
-				<th class="text-center">Total</th>
+				<th>Código</th>
+				<th>Descripción</th>
+				<th class="text-center" width="100">Cantidad</th>
+				<th class="text-center" width="100">Precio</th>
+				<th class="text-center" width="100">Total</th>
 				<th class="text-center" width="80">Acciones</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr data-ng-repeat="(key, detail) in data.purchase_order_details" ng-hide="detail._deleted">
+				<td>{{ detail.product.code }}</td>
 				<td>
-					<div>{{ detail.product.code }}</div>
 					<div class="cls-small">{{ detail.product.description }}</div>
 				</td>
 				<td align="right">
@@ -103,8 +104,7 @@
 						<input type="number" class="form-control"
 							ng-model="input_quantity" 
 							ng-blur="endEditDetail(detail, 'quantity', $event)" 
-							ng-keypress="keyPressDetail($event, 'quantity')"> 
-							<!--ng-model-options="{updateOn : 'change blur'}"-->
+							ng-keypress="keyPressDetail($event, 'quantity')">
 					</div>
 				</td>
 				<td align="right">
@@ -115,8 +115,7 @@
 						<input type="number" class="form-control"
 							ng-model="input_price" 
 							ng-blur="endEditDetail(detail, 'price', $event)" 
-							ng-keypress="keyPressDetail($event, 'price')"> 
-							<!--ng-model-options="{updateOn : 'change blur'}"-->
+							ng-keypress="keyPressDetail($event, 'price')">
 					</div>
 				</td>
 				<td align="right">{{ detail.total | currency }}</td>
