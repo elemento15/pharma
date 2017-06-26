@@ -31,11 +31,12 @@
 				<thead>
 					<tr>
 						<th>Producto</th>
-						<th>Proveedor 1</th>
-						<th>Proveedor 2</th>
-						<th>Proveedor 3</th>
-						<th>Proveedor 4</th>
-						<th>Proveedor 5</th>
+						<th>Opción 1</th>
+						<th>Opción 2</th>
+						<th>Opción 3</th>
+						<th>Opción 4</th>
+						<th>Opción 5</th>
+						<th>Opción 6</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -58,6 +59,9 @@
 						</td>
 						<td align="right">
 							<div>{{ rec.columns[4].price | currency }}</div>
+						</td>
+						<td align="right">
+							<div>{{ rec.columns[5].price | currency }}</div>
 						</td>
 					</tr>
 				</tbody>
@@ -104,7 +108,10 @@
 
 			<br>
 
-			<div data-ng-repeat="(key, rec) in selected.columns" class="cls-info-compare">
+			<div class="cls-info-compare" 
+				data-ng-repeat="(key, rec) in selected.columns" 
+				ng-click="showVendorInfo(key)"
+				ng-class="{ active : (optionSelected == key) }">
 				<div>
 					<span class="cls-title">Proveedor {{ key + 1 }}:</span>&nbsp;&nbsp;
 					<span class="text-right"><i>{{ rec.price | currency }}</i></span>
@@ -115,21 +122,23 @@
 						<a href="#/vendors-edit/{{rec.vendor_id}}" target="_blank">{{ rec.vendor_name }}</a>
 					</span>
 				</div>
-				<div ng-show="rec.contact">
-					<span class="cls-small"><b>Contacto:</b></span>
-					<span class="cls-small">{{ rec.contact }}</span>
-				</div>
-				<div ng-show="rec.phone">
-					<span class="cls-small"><b>Teléfono:</b></span>
-					<span class="cls-small">{{ rec.phone }}</span>
-				</div>
-				<div ng-show="rec.mobile">
-					<span class="cls-small"><b>Celular:</b></span>
-					<span class="cls-small">{{ rec.mobile }}</span>
-				</div>
-				<div ng-show="rec.credit_conditions">
-					<span class="cls-small"><b>Condiciones de Crédito:</b></span>
-					<span class="cls-small">{{ rec.credit_conditions }}</span>
+				<div ng-show="optionSelected == key">
+					<div>
+						<span class="cls-small"><b>Contacto:</b></span>
+						<span class="cls-small">{{ rec.contact }}</span>
+					</div>
+					<div>
+						<span class="cls-small"><b>Teléfono:</b></span>
+						<span class="cls-small">{{ rec.phone }}</span>
+					</div>
+					<div>
+						<span class="cls-small"><b>Celular:</b></span>
+						<span class="cls-small">{{ rec.mobile }}</span>
+					</div>
+					<div>
+						<span class="cls-small"><b>Condiciones de Crédito:</b></span>
+						<span class="cls-small">{{ rec.credit_conditions }}</span>
+					</div>
 				</div>
 			</div>
 		</div>

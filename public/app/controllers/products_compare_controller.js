@@ -9,6 +9,7 @@ app.controller('ProductsCompareController', function ($scope, $http, $route, $lo
 	$scope.list = [];
 	$scope.keySelected = null;
 	$scope.selected = false;
+	$scope.optionSelected = null;
 
 	$scope.search = '';
 	$scope.orderBy = 'C';
@@ -36,6 +37,10 @@ app.controller('ProductsCompareController', function ($scope, $http, $route, $lo
 	$scope.productSelected = function (record, key) {
 		$scope.selected = record;
 		$scope.keySelected = key;
+	}
+
+	$scope.showVendorInfo = function (key) {
+		$scope.optionSelected = key;
 	}
 
 	$scope.setPagination = function (data, pagination) {

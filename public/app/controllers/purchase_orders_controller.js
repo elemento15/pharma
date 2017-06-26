@@ -46,6 +46,9 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		total: 0
 	};
 
+	$scope.input_quantity = 0;
+	$scope.input_price = 0;
+
 	$scope.vendorsList = [];
 	$scope.statusList = [];
 
@@ -307,6 +310,69 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			order.status = response;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
+		});
+	}
+
+	$scope.editDetail = function (detail, type) {
+		if (type == 'quantity') {
+			$scope.input_quantity = parseFloat(detail.quantity);
+			detail.editing_quantity = true;
+			$timeout(function () {
+				$('input[ng-model="input_quantity"]').focus().select();
+		    }, 50);
+		}
+
+		if (type == 'price') {
+			$scope.input_price = parseFloat(detail.price);
+			detail.editing_price = true;
+			$timeout(function () {
+				$('input[ng-model="input_price"]').focus().select();
+		    }, 50);
+		}
+	}
+
+	$scope.endEditDetail = function (detail, type, evt) {
+		var value = parseFloat(evt.target.value);
+		if (! value) {
+			toastr.warning('Capture un número válido', 'Validaciones');
+			$scope.clearEditingDetails('all');
+			return false;
+		}
+		
+		if (type == 'quantity') {
+			detail.quantity = value;
+		}
+
+		if (type == 'price') {
+			detail.price = value;
+		}
+
+		$scope.clearEditingDetails(type);
+		detail.total = detail.quantity * detail.price;
+		$scope.calculateTotal();
+	}
+
+	$scope.keyPressDetail = function (evt, type) {
+		var key = evt.keyCode;
+
+		if (key == 27) {
+			$scope.clearEditingDetails(type);
+		}
+
+		if (key == 13) {
+			evt.target.blur();
+		}
+	}
+
+	$scope.clearEditingDetails = function (type) {
+		$scope.data.purchase_order_details.forEach(function (item) {
+			if (type == 'quantity' || type == 'all') {
+				item.editing_quantity = false;
+			}
+
+			if (type == 'price' || type == 'all') {
+				item.editing_price = false;
+			}
 		});
 	}
 

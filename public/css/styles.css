@@ -130,10 +130,14 @@ ul.pagination {
 
 .cls-info-compare {
 	margin-bottom: 10px;
-	background-color: #dfe7f3;
+	background-color: #eaeaea;
 	padding: 5px 10px;
 	border-radius: 5px;
 	border: 1px solid #d2d2d2;
+}
+
+.cls-info-compare.active {
+	background-color: #dff0d8;
 }
 
 .cls-info-compare .cls-title {

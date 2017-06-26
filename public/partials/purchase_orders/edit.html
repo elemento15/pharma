@@ -95,8 +95,30 @@
 					<div>{{ detail.product.code }}</div>
 					<div class="cls-small">{{ detail.product.description }}</div>
 				</td>
-				<td align="right">{{ detail.quantity | number }}</td>
-				<td align="right">{{ detail.price | currency }}</td>
+				<td align="right">
+					<div ng-hide="detail.editing_quantity" ng-dblclick="editDetail(detail, 'quantity')">
+						{{ detail.quantity | number }}
+					</div>
+					<div ng-if="detail.editing_quantity" class="cls-form-detail">
+						<input type="number" class="form-control"
+							ng-model="input_quantity" 
+							ng-blur="endEditDetail(detail, 'quantity', $event)" 
+							ng-keypress="keyPressDetail($event, 'quantity')"> 
+							<!--ng-model-options="{updateOn : 'change blur'}"-->
+					</div>
+				</td>
+				<td align="right">
+					<div ng-hide="detail.editing_price" ng-dblclick="editDetail(detail, 'price')">
+						{{ detail.price | currency }}
+					</div>
+					<div ng-if="detail.editing_price" class="cls-form-detail">
+						<input type="number" class="form-control"
+							ng-model="input_price" 
+							ng-blur="endEditDetail(detail, 'price', $event)" 
+							ng-keypress="keyPressDetail($event, 'price')"> 
+							<!--ng-model-options="{updateOn : 'change blur'}"-->
+					</div>
+				</td>
 				<td align="right">{{ detail.total | currency }}</td>
 				<td align="center">
 					<div class="cls-actions">
