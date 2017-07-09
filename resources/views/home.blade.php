@@ -35,6 +35,7 @@
 					</ul>
 				</li>
 				<li><a href="#/purchase-orders">Ordenes de Compra</a></li>
+				<li><a href="#/cotizations">Cotizaciones</a></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">

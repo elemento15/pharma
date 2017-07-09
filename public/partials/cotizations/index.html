@@ -1,0 +1,123 @@
+<div class="container-fluid">
+	<h3 class="cls-title">Cotizaciones</h3>
+	
+	<div class="row cls-toolbar">
+		<div class="col-sm-2">
+			<a class="btn btn-primary" href="#/cotizations-new">Nueva</a>
+		</div>
+
+		<!-- filters -->
+		<div class="col-sm-3">
+			<div class="form-inline">
+				<div class="form-group">
+					<label>Estado:</label>
+					<select class="form-control" ng-model="filters.active" ng-change="changeFilter()">
+						<option value="">(Todos)</option>
+						<option value="1">Activos</option>
+						<option value="0">Inactivos</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-3">
+			<div class="form-inline">
+				<div class="form-group">
+					<label>Status:</label>
+					<select class="form-control" ng-model="filters.status_id" ng-change="changeFilter()">
+						<option value="">(Todos)</option>
+						<option ng-repeat="item in statusList" value="{{item.id}}">{{ item.name }}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<!-- search input -->
+		<div class="col-sm-4">
+			<input type="text" class="form-control" placeholder="Buscar" ng-model="search" ng-change="searchData()" ng-model-options="{updateOn : 'change blur'}">
+		</div>
+	</div>
+
+	<table class="table table-condensed table-bordered cls-table">
+		<thead>
+			<tr>
+				<th width="45">&nbsp;</th>
+				<th>Num.</th>
+				<th width="80">Fecha</th>
+				<th>Cliente</th>
+				<th class="text-center">Total</th>
+				<th width="80" class="text-center">Status</th>
+				<th width="80" class="text-center">Estado</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="(key, rec) in list">
+				<td align="center">
+					<div class="cls-actions">
+						<a class="btn btn-info btn-xs" href="#/cotizations-edit/{{ rec.id }}">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+					</div>
+				</td>
+				<td>{{ rec.id }}</td>
+				<td>
+					<div>{{ rec.cotization_date.substr(0, 10) }}</div>
+				</td>
+				<td>
+					<div>{{ rec.customer.name }}</div>
+					<div class="cls-small"><i>{{ rec.customer.rfc }}</i></div>
+				</td>
+				<td align="right">
+					<div>{{ rec.total | currency }}</div>
+				</td>
+				<td align="center">
+					<span class="label label-info cls-pointer" 
+					      ng-show="rec.status.is_default" 
+					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
+					</span>
+					<span class="label label-warning cls-pointer" 
+					      ng-hide="rec.status.is_default || rec.status.is_final" 
+					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
+					</span>
+					<span class="cls-small cls-pointer" 
+					      ng-show="rec.status.is_final" 
+					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
+					</span>
+				</td>
+				<td align="center">
+					<div ng-hide="rec.status_loading">
+						<span class="label label-default cls-pointer" ng-if="rec.active" ng-click="setInactive(rec)">Activo</span>
+						<span class="label label-warning cls-pointer" ng-if="!rec.active" ng-click="setActive(rec)">Inactivo</span>
+					</div>
+					<div ng-show="rec.status_loading">
+						<img src="/images/loading.gif">
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<!-- paginator -->
+	<div class="row">
+		<div class="col-sm-12">
+			<nav class="cls-pagination">
+				<ul class="pagination">
+					<li ng-click="paginate('first')">
+						<span aria-hidden="true">&laquo; &laquo;</span>
+					</li>
+					<li ng-click="paginate('previous')">
+						<span aria-hidden="true">&laquo;</span>
+					</li>-
+					<li><span>{{ pageInfo }}</span></li>
+					<li ng-click="paginate('next')">
+						<span aria-hidden="true">&raquo;</span>
+					</li>
+					<li ng-click="paginate('last')">
+						<span aria-hidden="true">&raquo; &raquo;</span>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+</div>

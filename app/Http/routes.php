@@ -34,6 +34,12 @@ Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate'
 Route::post('purchase_orders/{id}/deactivate', 'PurchaseOrdersController@deactivate');
 Route::post('purchase_orders/{id}/change_status', 'PurchaseOrdersController@change_status');
 
+Route::resource('cotizations', 'CotizationsController');
+Route::post('cotizations/{id}/activate', 'CotizationsController@activate');
+Route::post('cotizations/{id}/deactivate', 'CotizationsController@deactivate');
+Route::post('cotizations/{id}/change_status', 'CotizationsController@change_status');
+
+
 Route::resource('statuses', 'StatusesController');
 
 Route::resource('vendor_prices', 'VendorPricesController');

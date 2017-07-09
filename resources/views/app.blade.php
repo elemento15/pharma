@@ -62,5 +62,6 @@
     <script src="/app/controllers/products_history_controller.js"></script>
     <script src="/app/controllers/products_compare_controller.js"></script>
     <script src="/app/controllers/purchase_orders_controller.js"></script>
+    <script src="/app/controllers/cotizations_controller.js"></script>
 </body>
 </html>

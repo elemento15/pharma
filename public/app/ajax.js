@@ -122,6 +122,32 @@ app.factory('PurchaseOrderService', ['$http', function($http) {
 	}
 }]);
 
+app.factory('CotizationService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('cotizations/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('cotizations/'+ data.id, data) : $http.post('cotizations', data);
+		},
+		read     : function(data) {
+			return $http.get('cotizations?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('cotizations/'+ data.id);
+		},
+		activate : function(data) {
+			return $http.post('cotizations/'+ data.id +'/activate');
+		},
+		deactivate : function(data) {
+			return $http.post('cotizations/'+ data.id +'/deactivate');
+		},
+		change_status : function (data) {
+			return $http.post('cotizations/'+ data.id +'/change_status', data);
+		}
+	}
+}]);
+
 app.factory('StatusService', ['$http', function($http) {
 	return {
 		get  : function (data) {

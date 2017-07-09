@@ -1,0 +1,143 @@
+<div class="container-fluid">
+	<h3 class="cls-title">{{title}} <span ng-show="data.id">{{ data.id }}</span></h3>
+
+	<form class="row">
+		<div class="col-sm-6">
+			<div class="form-group" style="margin-bottom: 5px;">
+				<label>Cliente:</label>
+				
+				<ui-select ng-model="data.customer">
+				    <ui-select-match placeholder="Seleccione un Cliente">
+				        <span ng-bind="$select.selected.name"></span>
+				    </ui-select-match>
+				    <ui-select-choices repeat="item in (customersList | filter: $select.search) track by item.id">
+				        <span ng-bind="item.name"></span>
+				        <div class="cls-small"><i>{{ item.rfc }}</i></div>
+				    </ui-select-choices>
+				</ui-select>
+			</div>
+
+			<div class="hidden-xs" style="margin-left: 10px;">
+				<div class="row">
+					<div class="col-sm-2">RFC:</div>
+					<div class="col-sm-8 text-info"><i>{{ data.customer.rfc }}</i></div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">Email:</div>
+					<div class="col-sm-8 text-info"><i>{{ data.customer.email }}</i></div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">Contacto:</div>
+					<div class="col-sm-8 text-info"><i>{{ data.customer.contact }}</i></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="row" style="margin-bottom: 5px;">
+				<div class="col-sm-2"><b>Fecha:</b></div>
+				<div class="col-sm-8 text-info"><b>{{ data.cotization_date.substr(0, 10) }}</b></div>
+			</div>
+			<div class="form-group">
+				<label>Comentarios:</label>
+				<textarea class="form-control" rows="3" ng-model="data.comments"></textarea>
+			</div>
+		</div>
+	</form>
+
+	<h5 class="cls-title">Productos</h5>
+
+	<form class="form-inline cls-form-detail" ng-hide="data.status.is_final">
+		<div class="form-group">
+			<input type="text" class="form-control" ng-model="product.code" ng-keypress="searchCode($event);" placeholder="Código" maxlength="20" style="width:100px">
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control" ng-model="product.description" ng-keypress="searchDescription($event);" placeholder="Descripción" style="width:250px">
+		</div>
+		<div class="form-group input-group input-group-sm">
+			<span class="input-group-addon">Cant:</span>
+			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" style="width:85px" 
+				ng-model="product.quantity" 
+				ng-change="getTotalProduct()" 
+				ng-keypress="setFocus($event, 'price')">
+		</div>
+		<div class="form-group input-group input-group-sm">
+			<span class="input-group-addon">$</span>
+			<input type="number" class="form-control" placeholder="Precio" title="Precio" style="width:85px" 
+				ng-model="product.price" 
+				ng-change="getTotalProduct()" 
+				ng-keypress="setFocus($event, 'add')">
+		</div>
+		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()" title="Agregar Producto">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+		<button class="btn btn-info btn-xs" id="btnOpenSearch" ng-click="openSearch()" title="Abrir Búsqueda">
+			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+		</button>
+		<button class="btn btn-warning btn-xs" id="btnClear" ng-click="clearProduct(); focusCode();" title="Limpiar Captura">
+			<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+		</button>
+	</form>
+
+	<table class="table table-condensed table-bordered cls-table">
+		<thead>
+			<tr>
+				<th>Código</th>
+				<th>Descripción</th>
+				<th class="text-center" width="100">Cantidad</th>
+				<th class="text-center" width="100">Precio</th>
+				<th class="text-center" width="100">Total</th>
+				<th class="text-center" width="80">Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="(key, detail) in data.cotization_details" ng-hide="detail._deleted">
+				<td>{{ detail.product.code }}</td>
+				<td>
+					<div class="cls-small">{{ detail.product.description }}</div>
+				</td>
+				<td align="right">
+					<div ng-hide="detail.editing_quantity" ng-dblclick="editDetail(detail, 'quantity')">
+						{{ detail.quantity | number }}
+					</div>
+					<div ng-if="detail.editing_quantity" class="cls-form-detail">
+						<input type="number" class="form-control"
+							ng-model="input_quantity" 
+							ng-blur="endEditDetail(detail, 'quantity', $event)" 
+							ng-keypress="keyPressDetail($event, 'quantity')">
+					</div>
+				</td>
+				<td align="right">
+					<div ng-hide="detail.editing_price" ng-dblclick="editDetail(detail, 'price')">
+						{{ detail.price | currency }}
+					</div>
+					<div ng-if="detail.editing_price" class="cls-form-detail">
+						<input type="number" class="form-control"
+							ng-model="input_price" 
+							ng-blur="endEditDetail(detail, 'price', $event)" 
+							ng-keypress="keyPressDetail($event, 'price')">
+					</div>
+				</td>
+				<td align="right">{{ detail.total | currency }}</td>
+				<td align="center">
+					<div class="cls-actions">
+						<button class="btn btn-danger btn-xs" ng-click="deleteProduct(detail, key)" ng-hide="data.status.is_final">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="row cls-toolbar-gray">
+		<div class="col-sm-10">
+			<button class="btn btn-primary" ng-hide="data.status.is_final" ng-click="save()">Guardar</button>
+			<a class="btn btn-warning" href="#/cotizations">Cerrar</a>
+		</div>
+		<div class="col-sm-2">
+			<span class="cls-total-amount">{{ data.total | currency }}</span>
+		</div>
+	</div>
+
+</div>
