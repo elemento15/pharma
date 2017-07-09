@@ -128,11 +128,8 @@ class PurchaseOrdersController extends BaseController {
                         // mark product as worked
                         // $product = Product::find($item['product_id']);
                         // $product->setWorked();
-
-                        // update vendor price
-                        $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
                     }
-
+                    
                     $detail->product_id = $item['product_id'];
                     $detail->quantity = $item['quantity'];
                     $detail->price = $item['price'];
@@ -145,6 +142,9 @@ class PurchaseOrdersController extends BaseController {
                     }
 
                     $total += $detail->total;
+
+                    // update vendor price
+                    $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
                 }
 
                 $purchase->total = $total;
