@@ -35,7 +35,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	{
 		$name = explode(' ', $this->name);
 		
-		return $name[0].' '.$name[1];
+		if (count($name) > 1) {
+			return $name[0].' '.$name[1];
+		} else {
+			return $name[0];
+		}
 	}
 
 }
