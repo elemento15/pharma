@@ -11,6 +11,8 @@ use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Services\CotizationPdf;
+
 class CotizationsController extends BaseController {
 
     protected $mainModel = 'App\Cotization';
@@ -165,6 +167,19 @@ class CotizationsController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al activar'), 500);
         }
+    }
+
+    /**
+     * Print cotization pdf
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function print_pdf($id, Request $request)
+    {
+        $order = Cotization::find($id);
+        $pdf = new CotizationPdf($order);
+        return Response::make($pdf->Output('I', 'cotizacion_'.$id.'.pdf'), 200, array('content-type' => 'application/pdf'));
     }
 
 }
