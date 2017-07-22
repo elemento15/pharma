@@ -12,6 +12,8 @@ use Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Services\PurchaseOrderPdf;
+
 class PurchaseOrdersController extends BaseController {
 
     protected $mainModel = 'App\PurchaseOrder';
@@ -180,6 +182,19 @@ class PurchaseOrdersController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al activar'), 500);
         }
+    }
+
+    /**
+     * Print purchase order pdf
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function print_pdf($id, Request $request)
+    {
+        $order = PurchaseOrder::find($id);
+        $pdf = new PurchaseOrderPdf($order);
+        return Response::make($pdf->Output('I', 'orden_'.$id.'.pdf'), 200, array('content-type' => 'application/pdf'));
     }
 
 

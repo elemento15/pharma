@@ -144,7 +144,7 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-
+		Codedge\Fpdf\FpdfServiceProvider::class,
 	],
 
 	/*
@@ -192,7 +192,7 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-
+		'Fpdf'      => Codedge\Fpdf\Facades\Fpdf::class,
 	],
 
 ];
