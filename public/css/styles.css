@@ -72,6 +72,10 @@ table.cls-table tr:hover td .cls-actions {
 	display: block;
 }
 
+.cls-actions .btn-xs {
+	font-size: 11px;
+}
+
 table td .cls-small {
 	font-size: 12px;
 	line-height: 16px;
