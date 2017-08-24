@@ -63,6 +63,8 @@ class CotizationsController extends BaseController {
                 $detail->quantity = $item['quantity'];
                 $detail->price = $item['price'];
                 $detail->total = $item['quantity'] * $item['price'];
+                $detail->lot = $item['lot'];
+                $detail->expiration = $item['expiration'];
                 $total += $detail->total;
 
                 $cotization->cotization_details()->save($detail);
@@ -124,6 +126,8 @@ class CotizationsController extends BaseController {
                     $detail->quantity = $item['quantity'];
                     $detail->price = $item['price'];
                     $detail->total = $item['quantity'] * $item['price'];
+                    $detail->lot = $item['lot'];
+                    $detail->expiration = $item['expiration'];
 
                     if ($id_detail) {
                         $detail->save();

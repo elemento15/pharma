@@ -43,7 +43,9 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		description: '',
 		quantity: '',
 		price: '',
-		total: 0
+		total: 0,
+		lot: '',
+		expiration: ''
 	};
 
 	$scope.input_quantity = 0;
@@ -116,7 +118,7 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 				if (response.success) {
 					if (response.product) {
 						$scope.setProduct(response.product);
-						$scope.focusQuantity();
+						$('input[ng-model="product.lot"]').focus().select();
 					} else {
 						$scope.openSearch(description);
 					}
@@ -147,10 +149,14 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			evt.preventDefault();
 
 			switch (opt) {
-				case 'price' : $('input[ng-model="product.price"]').focus().select();
-				               break;
-				case 'add'   : $('#btnAddProduct').focus();
-				               break;
+				case 'price'      : $('input[ng-model="product.price"]').focus().select();
+				                    break;
+				case 'add'        : $('#btnAddProduct').focus();
+				                    break;
+				case 'expiration' : $('input[ng-model="product.expiration"]').focus().select();
+				                    break;
+				case 'quantity'   : $('input[ng-model="product.quantity"]').focus().select();
+				                    break;
 			}
 		}
 	}
@@ -163,6 +169,18 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			$('input[ng-model="product.code"]').focus().select();
 			return false;
 		}
+
+		if (parseFloat(product.price) == 0) {
+			toastr.warning('Ingrese un precio válido');
+			$('input[ng-model="product.price"]').focus().select();
+			return false;
+		}
+
+		if (parseFloat(product.quantity) == 0) {
+			toastr.warning('Ingrese una cantidad válida');
+			$('input[ng-model="product.quantity"]').focus().select();
+			return false;
+		}
 		
 		$scope.data.cotization_details.push({
 			product_id: product.id,
@@ -173,7 +191,9 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 				id: product.id,
 				code: product.code,
 				description: product.description
-			}
+			},
+			lot: product.lot,
+			expiration: product.expiration
 		});
 
 		$scope.clearProduct();
@@ -213,7 +233,9 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			description: '',
 			quantity: '',
 			price: '',
-			total: 0
+			total: 0,
+			lot: '',
+			expiration: ''
 		};
 	}
 
@@ -309,14 +331,36 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 				$('input[ng-model="input_price"]').focus().select();
 		    }, 50);
 		}
+
+		if (type == 'lot') {
+			$scope.input_lot = detail.lot;
+			detail.editing_lot = true;
+			$timeout(function () {
+				$('input[ng-model="input_lot"]').focus().select();
+		    }, 50);
+		}
+
+		if (type == 'expiration') {
+			$scope.input_expiration = detail.expiration;
+			detail.editing_expiration = true;
+			$timeout(function () {
+				$('input[ng-model="input_expiration"]').focus().select();
+		    }, 50);
+		}
 	}
 
 	$scope.endEditDetail = function (detail, type, evt) {
-		var value = parseFloat(evt.target.value);
-		if (! value) {
-			toastr.warning('Capture un número válido', 'Validaciones');
-			$scope.clearEditingDetails('all');
-			return false;
+		var value;
+
+		if (type == 'quantity' || type == 'price') {
+			value = parseFloat(evt.target.value);
+			if (! value) {
+				toastr.warning('Capture un número válido', 'Validaciones');
+				$scope.clearEditingDetails('all');
+				return false;
+			}
+		} else {
+			value = evt.target.value;
 		}
 		
 		if (type == 'quantity') {
@@ -325,6 +369,14 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 
 		if (type == 'price') {
 			detail.price = value;
+		}
+
+		if (type == 'lot') {
+			detail.lot = value;
+		}
+
+		if (type == 'expiration') {
+			detail.expiration = value;
 		}
 
 		$scope.clearEditingDetails(type);
@@ -352,6 +404,14 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 
 			if (type == 'price' || type == 'all') {
 				item.editing_price = false;
+			}
+
+			if (type == 'lot' || type == 'all') {
+				item.editing_lot = false;
+			}
+
+			if (type == 'expiration' || type == 'all') {
+				item.editing_expiration = false;
 			}
 		});
 	}

@@ -48,43 +48,59 @@
 	<h5 class="cls-title">Productos</h5>
 
 	<form class="form-inline cls-form-detail" ng-hide="data.status.is_final">
-		<div class="form-group">
-			<input type="text" class="form-control" ng-model="product.code" ng-keypress="searchCode($event);" placeholder="Código" maxlength="20" style="width:100px">
+		<div style="margin-bottom: 5px;">
+			<div class="form-group">
+				<input type="text" class="form-control" ng-model="product.code" ng-keypress="searchCode($event);" placeholder="Código" maxlength="20" style="width:100px">
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" ng-model="product.description" ng-keypress="searchDescription($event);" placeholder="Descripción" style="width:250px">
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" ng-model="product.lot" placeholder="Lote" maxlength="30" style="width:150px" 
+					ng-keypress="setFocus($event, 'expiration')">
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" ng-model="product.expiration" placeholder="Caducidad" maxlength="20" style="width:150px"
+					ng-keypress="setFocus($event, 'quantity')">
+			</div>
 		</div>
-		<div class="form-group">
-			<input type="text" class="form-control" ng-model="product.description" ng-keypress="searchDescription($event);" placeholder="Descripción" style="width:250px">
+		
+		<div>
+			<div class="form-group input-group input-group-sm">
+				<span class="input-group-addon">Cantidad:</span>
+				<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" style="width:85px" 
+					ng-model="product.quantity" 
+					ng-change="getTotalProduct()" 
+					ng-keypress="setFocus($event, 'price')">
+			</div>
+			<div class="form-group input-group input-group-sm">
+				<span class="input-group-addon">$</span>
+				<input type="number" class="form-control" placeholder="Precio" title="Precio" style="width:85px" 
+					ng-model="product.price" 
+					ng-change="getTotalProduct()" 
+					ng-keypress="setFocus($event, 'add')">
+			</div>
+			
+			<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()" title="Agregar Producto">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</button>
+			<button class="btn btn-info btn-xs" id="btnOpenSearch" ng-click="openSearch()" title="Abrir Búsqueda">
+				<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+			</button>
+			<button class="btn btn-warning btn-xs" id="btnClear" ng-click="clearProduct(); focusCode();" title="Limpiar Captura">
+				<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+			</button>
 		</div>
-		<div class="form-group input-group input-group-sm">
-			<span class="input-group-addon">Cant:</span>
-			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" style="width:85px" 
-				ng-model="product.quantity" 
-				ng-change="getTotalProduct()" 
-				ng-keypress="setFocus($event, 'price')">
-		</div>
-		<div class="form-group input-group input-group-sm">
-			<span class="input-group-addon">$</span>
-			<input type="number" class="form-control" placeholder="Precio" title="Precio" style="width:85px" 
-				ng-model="product.price" 
-				ng-change="getTotalProduct()" 
-				ng-keypress="setFocus($event, 'add')">
-		</div>
-		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()" title="Agregar Producto">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-		</button>
-		<button class="btn btn-info btn-xs" id="btnOpenSearch" ng-click="openSearch()" title="Abrir Búsqueda">
-			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-		</button>
-		<button class="btn btn-warning btn-xs" id="btnClear" ng-click="clearProduct(); focusCode();" title="Limpiar Captura">
-			<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-		</button>
+		
 	</form>
 
 	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th>Código</th>
-				<th>Descripción</th>
-				<th class="text-center" width="100">Cantidad</th>
+				<th>Código / Descripción</th>
+				<th width="120">Lote</th>
+				<th width="100">Caducidad</th>
+				<th class="text-center" width="80">Cant.</th>
 				<th class="text-center" width="100">Precio</th>
 				<th class="text-center" width="100">Total</th>
 				<th class="text-center" width="80">Acciones</th>
@@ -92,9 +108,31 @@
 		</thead>
 		<tbody>
 			<tr data-ng-repeat="(key, detail) in data.cotization_details" ng-hide="detail._deleted">
-				<td>{{ detail.product.code }}</td>
 				<td>
+					<div>{{ detail.product.code }}</div>
 					<div class="cls-small">{{ detail.product.description }}</div>
+				</td>
+				<td>
+					<div ng-hide="detail.editing_lot" ng-dblclick="editDetail(detail, 'lot')">
+						<div class="cls-small" style="min-height: 15px;">{{ detail.lot }}</div>
+					</div>
+					<div ng-if="detail.editing_lot" class="cls-form-detail">
+						<input type="text" class="form-control"
+							ng-model="input_lot" 
+							ng-blur="endEditDetail(detail, 'lot', $event)" 
+							ng-keypress="keyPressDetail($event, 'lot')">
+					</div>
+				</td>
+				<td align="center">
+					<div ng-hide="detail.editing_expiration" ng-dblclick="editDetail(detail, 'expiration')">
+						<div class="cls-small" style="min-height: 15px;">{{ detail.expiration }}</div>
+					</div>
+					<div ng-if="detail.editing_expiration" class="cls-form-detail">
+						<input type="text" class="form-control"
+							ng-model="input_expiration" 
+							ng-blur="endEditDetail(detail, 'expiration', $event)" 
+							ng-keypress="keyPressDetail($event, 'expiration')">
+					</div>
 				</td>
 				<td align="right">
 					<div ng-hide="detail.editing_quantity" ng-dblclick="editDetail(detail, 'quantity')">
