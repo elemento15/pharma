@@ -172,7 +172,7 @@
 		<div class="col-sm-10">
 			<button class="btn btn-primary" ng-hide="data.status.is_final" ng-click="save()">Guardar</button>
 			<a class="btn btn-warning" href="#/cotizations">Cerrar</a>
-			<a class="btn btn-default" href="/cotizations/{{ data.id }}/print_pdf" target="_blank">Imprimir</a>
+			<a class="btn btn-default" ng-show="data.id" href="/cotizations/{{ data.id }}/print_pdf" target="_blank">Imprimir</a>
 		</div>
 		<div class="col-sm-2">
 			<span class="cls-total-amount">{{ data.total | currency }}</span>
