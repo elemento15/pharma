@@ -62,9 +62,11 @@ class CotizationPdf extends Fpdf {
         $this->SetFont('Arial', 'B', 9);
         $border = 'B';
 
-        $this->Cell(18, 5, 'Cantidad', $border, 0, 'C');
-        $this->Cell(40, 5, 'Código', $border, 0, 'L');
-        $this->Cell(90, 5, 'Descripción', $border, 0, 'L');
+        $this->Cell(14, 5, 'Cant.', $border, 0, 'C');
+        $this->Cell(25, 5, 'Lote', $border, 0, 'L');
+        // $this->Cell(40, 5, 'Código', $border, 0, 'L');
+        $this->Cell(86, 5, 'Descripción', $border, 0, 'L');
+        $this->Cell(23, 5, 'Caducidad', $border, 0, 'L');
         $this->Cell(21, 5, 'Precio', $border, 0, 'C');
         $this->Cell(21, 5, 'Total', $border, 0, 'C');
         $this->Cell(0,  5, '', $border, 1);
@@ -84,9 +86,11 @@ class CotizationPdf extends Fpdf {
         
         $details = $cotization->cotization_details()->get();
         foreach ($details as $item) {
-            $this->Cell(18, 5, $item->quantity, $border, 0, 'R', $fill);
-            $this->Cell(40, 5, $item->product()->first()->code, $border, 0, 'L', $fill);
-            $this->Cell(90, 5, $item->product()->first()->description, $border, 0, 'L', $fill);
+            $this->Cell(14, 5, $item->quantity, $border, 0, 'R', $fill);
+            $this->Cell(25, 5, $item->lot, $border, 0, 'L', $fill);
+            // $this->Cell(40, 5, $item->product()->first()->code, $border, 0, 'L', $fill);
+            $this->Cell(86, 5, $item->product()->first()->description, $border, 0, 'L', $fill);
+            $this->Cell(23, 5, $item->expiration, $border, 0, 'C', $fill);
             $this->Cell(21, 5, number_format($item->price, 2), $border, 0, 'R', $fill);
             $this->Cell(21, 5, number_format($item->total, 2), $border, 0, 'R', $fill);
             $this->Cell(0,  5, '', $border, 1);
