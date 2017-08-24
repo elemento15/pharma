@@ -86,7 +86,7 @@ class PurchaseOrderPdf extends Fpdf {
         foreach ($details as $item) {
             $this->Cell(18, 5, $item->quantity, $border, 0, 'R', $fill);
             $this->Cell(40, 5, $item->product()->first()->code, $border, 0, 'L', $fill);
-            $this->Cell(90, 5, $item->product()->first()->description, $border, 0, 'L', $fill);
+            $this->Cell(90, 5, substr($item->product()->first()->description, 0, 55), $border, 0, 'L', $fill);
             $this->Cell(21, 5, number_format($item->price, 2), $border, 0, 'R', $fill);
             $this->Cell(21, 5, number_format($item->total, 2), $border, 0, 'R', $fill);
             $this->Cell(0,  5, '', $border, 1);
