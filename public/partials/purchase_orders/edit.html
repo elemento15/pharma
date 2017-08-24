@@ -56,14 +56,16 @@
 		</div>
 		<div class="form-group input-group input-group-sm">
 			<span class="input-group-addon">Cant:</span>
-			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" style="width:85px" 
+			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" 
+			    style="width:85px; text-align: right;" 
 				ng-model="product.quantity" 
 				ng-change="getTotalProduct()" 
 				ng-keypress="setFocus($event, 'price')">
 		</div>
 		<div class="form-group input-group input-group-sm">
 			<span class="input-group-addon">$</span>
-			<input type="number" class="form-control" placeholder="Precio" title="Precio" style="width:85px" 
+			<input type="number" class="form-control" placeholder="Precio" title="Precio" 
+			    style="width:85px; text-align: right;" 
 				ng-model="product.price" 
 				ng-change="getTotalProduct()" 
 				ng-keypress="setFocus($event, 'add')">
