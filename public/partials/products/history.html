@@ -1,45 +1,40 @@
 <div class="container-fluid">
 	<h3 class="cls-title">Historial de Productos</h3>
 
-	<!--<table class="table table-condensed table-bordered cls-table">
-		<thead>
-			<tr>
-				<th>Código</th>
-				<th>Descripción</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr data-ng-repeat="(key, rec) in list">
-				<td>
-					<div><i>{{ rec.code  }}</i></div>
-				</td>
-				<td>
-					<div>{{ rec.description  }}</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>-->
+	<form class="row">
+		<div class="col-sm-6">
+			<div class="form-group" style="margin-bottom: 5px;">
+				<label>Proveedor:</label>
+				<ui-select ng-model="data.vendor">
+				    <ui-select-match placeholder="Seleccione un Proveedor">
+				        <span ng-bind="$select.selected.name"></span>
+				    </ui-select-match>
+				    <ui-select-choices repeat="item in (vendorsList | filter: $select.search) track by item.id">
+				        <span ng-bind="item.name"></span>
+				        <div class="cls-small"><i>{{ item.rfc }}</i></div>
+				    </ui-select-choices>
+				</ui-select>
+			</div>
 
-	<!-- paginator -->
-	<!--<div class="row">
-		<div class="col-sm-12">
-			<nav class="cls-pagination">
-				<ul class="pagination">
-					<li ng-click="paginate('first')">
-						<span aria-hidden="true">&laquo; &laquo;</span>
-					</li>
-					<li ng-click="paginate('previous')">
-						<span aria-hidden="true">&laquo;</span>
-					</li>-
-					<li><span>{{ pageInfo }}</span></li>
-					<li ng-click="paginate('next')">
-						<span aria-hidden="true">&raquo;</span>
-					</li>
-					<li ng-click="paginate('last')">
-						<span aria-hidden="true">&raquo; &raquo;</span>
-					</li>
-				</ul>
-			</nav>
+			<div class="form-group" style="margin-bottom: 5px;">
+				<label>Producto:</label>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Producto" 
+					       ng-model="product.description"
+					       ng-keypress="keyPressProduct($event)" 
+					       ng-change="searchProduct()" 
+					       ng-model-options="{updateOn: 'blur'}">
+					<span class="input-group-btn">
+						<button class="btn btn-info" ng-click="openSearchProduct()">
+							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+						</button>
+					</span>
+				</div>
+			</div>
+
+			<button class="btn btn-primary" ng-click="printReport()">Imprimir</button>
 		</div>
-	</div>-->
+	</form>		
+
+	
 </div>

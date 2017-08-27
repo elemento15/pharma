@@ -1,11 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 use App\Product;
+use App\Vendor;
 
 use Illuminate\Database\Eloquent\Model;
 
 use Response;
 use Illuminate\Http\Request;
+
+use App\Services\ProductHistoryPdf;
 
 class ProductsController extends BaseController {
 
@@ -143,6 +146,22 @@ class ProductsController extends BaseController {
         }
 
         return Response::json($products);
+    }
+
+    /**
+     * Print product history pdf
+     *
+     * @param  int  $product
+     * @param  int  $vendor
+     * @return Response
+     */
+    public function rpt_history($product_id, $vendor_id, Request $request)
+    {
+        $product = Product::find($product_id);
+        $vendor = Vendor::find($vendor_id);
+
+        $pdf = new ProductHistoryPdf($product, $vendor);
+        return Response::make($pdf->Output('I', 'product_history.pdf'), 200, array('content-type' => 'application/pdf'));
     }
 
     private function orderByPrice()
