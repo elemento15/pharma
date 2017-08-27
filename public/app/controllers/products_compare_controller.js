@@ -37,6 +37,7 @@ app.controller('ProductsCompareController', function ($scope, $http, $route, $lo
 	$scope.productSelected = function (record, key) {
 		$scope.selected = record;
 		$scope.keySelected = key;
+		$scope.optionSelected = null;
 	}
 
 	$scope.showVendorInfo = function (key) {
