@@ -57,6 +57,7 @@ table.cls-table thead tr {
 
 table.cls-table tbody td {
 	line-height: 16px;
+	height: 33px;
 }
 
 table.cls-table tbody tr:hover {

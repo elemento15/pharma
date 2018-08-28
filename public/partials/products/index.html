@@ -32,6 +32,7 @@
 				<th width="80">Acciones</th>
 				<th>Código</th>
 				<th>Descripción</th>
+				<th width="100" class="text-center">IVA</th>
 				<th width="100" class="text-center">Estado</th>
 			</tr>
 		</thead>
@@ -52,6 +53,9 @@
 				</td>
 				<td>
 					<div>{{ rec.description  }}</div>
+				</td>
+				<td>
+					<div class="text-right">{{ rec.iva  }}%</div>
 				</td>
 				<td align="center">
 					<div ng-hide="rec.status_loading">

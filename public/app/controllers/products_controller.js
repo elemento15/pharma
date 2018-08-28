@@ -13,6 +13,10 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 			invalid = toastr.warning('Descripción requerida', 'Validaciones');
 		}
 
+		if (data.iva < 0 || data.iva > 100) {
+			invalid = toastr.warning('IVA inválido', 'Validaciones');
+		}
+
 		return (invalid) ? false : data;
 	}
 
@@ -21,6 +25,7 @@ app.controller('ProductsController', function ($scope, $http, $route, $location,
 		id: 0,
 		code: '',
 		description: '',
+		iva: 0,
 		active: 1,
 		comments: ''
 	};
