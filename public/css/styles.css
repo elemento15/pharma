@@ -81,7 +81,12 @@ table td .cls-small {
 	font-size: 12px;
 	line-height: 16px;
 	color: #666;
-	margin-top: 3px;
+}
+
+table td .cls-xsmall {
+	font-size: 11px;
+	line-height: 16px;
+	color: #999;
 }
 
 table td .cls-small-collapsed {
@@ -103,9 +108,9 @@ ul.pagination {
 	cursor: pointer;
 }
 
-.cls-small {
+/*.cls-small {
 	font-size: 12px;
-}
+}*/
 
 .cls-form-detail {
 	margin: 6px 0px;
@@ -118,8 +123,8 @@ ul.pagination {
 }
 
 .cls-total-amount {
-	font-size: 18px;
-	color: #ff0000;
+	font-size: 16px;
+	color: #696ce8;
 }
 
 

@@ -24,6 +24,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		vendor_id: '',
 		status_id: '',
 		order_date: '',
+		subtotal: 0,
+		iva_amount: 0,
 		total: 0,
 		active: 1,
 		comments: '',
@@ -43,7 +45,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		description: '',
 		quantity: '',
 		price: '',
-		total: 0
+		subtotal: 0,
+		iva: 0
 	};
 
 	$scope.input_quantity = 0;
@@ -140,7 +143,8 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			description: product.description,
 			quantity: 1,
 			price: 0,
-			total: 0
+			subtotal: 0,
+			iva: product.iva
 		};
 	}
 
@@ -159,18 +163,26 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 
 	$scope.addProduct = function () {
 		var product = $scope.product;
+		var iva_amount = 0;
+		var total = 0;
 
 		if (! product.id) {
 			toastr.warning('Seleccione un producto válido');
 			$('input[ng-model="product.code"]').focus().select();
 			return false;
 		}
+
+		iva_amount = (product.iva / 100) * product.subtotal;
+		total = product.subtotal + iva_amount;
 		
 		$scope.data.purchase_order_details.push({
 			product_id: product.id,
 			quantity: product.quantity,
 			price: product.price,
-			total: product.total,
+			subtotal: product.subtotal,
+			iva: product.iva,
+			iva_amount: iva_amount,
+			total: total,
 			product: {
 				id: product.id,
 				code: product.code,
@@ -216,14 +228,15 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			description: '',
 			quantity: '',
 			price: '',
-			total: 0
+			subtotal: 0,
+			iva: 0
 		};
 	}
 
-	$scope.getTotalProduct = function () {
+	/*$scope.getTotalProduct = function () {
 		var product = $scope.product;
 		$scope.product.total = product.quantity * product.price;
-	}
+	}*/
 
 	$scope.deleteProduct = function (product, key) {
 		$scope.data.purchase_order_details[key]._deleted = true;
@@ -231,14 +244,29 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		$scope.focusCode();
 	}
 
+	$scope.calculateDetailTotals = function () {
+		var product = $scope.product;
+		var subtotal = product.quantity * product.price;
+		var iva_amount = subtotal * product.iva;
+
+		$scope.product.subtotal = subtotal;
+	}
+
 	$scope.calculateTotal = function () {
+		var subtotal = 0;
+		var iva_amount = 0;
 		var total = 0;
+
 		$scope.data.purchase_order_details.forEach(function (item) {
 			if (! item._deleted) {
+				subtotal += item.subtotal;
+				iva_amount += item.iva_amount;
 				total += item.total;
 			}
 		});
 
+		$scope.data.subtotal = subtotal;
+		$scope.data.iva_amount = iva_amount;
 		$scope.data.total = total;
 	}
 
@@ -272,6 +300,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 			vendor: $scope.data.vendor.id
 		}).success(function (response) {
 			$scope.product.price = response.price;
+			$scope.calculateDetailTotals();
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -348,7 +377,9 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		}
 
 		$scope.clearEditingDetails(type);
-		detail.total = detail.quantity * detail.price;
+		detail.subtotal = detail.quantity * detail.price;
+		detail.iva_amount = (detail.iva / 100) * detail.subtotal;
+		detail.total = detail.subtotal + detail.iva_amount;
 		$scope.calculateTotal();
 	}
 

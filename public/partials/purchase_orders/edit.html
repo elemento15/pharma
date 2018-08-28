@@ -34,13 +34,13 @@
 		</div>
 
 		<div class="col-sm-6">
-			<div class="row" style="margin-bottom: 5px;">
-				<div class="col-sm-2"><b>Fecha:</b></div>
-				<div class="col-sm-8 text-info"><b>{{ data.order_date.substr(0, 10) }}</b></div>
-			</div>
 			<div class="form-group">
 				<label>Comentarios:</label>
 				<textarea class="form-control" rows="3" ng-model="data.comments"></textarea>
+			</div>
+			<div class="row" style="margin-bottom: 5px;">
+				<div class="col-sm-2"><b>Fecha:</b></div>
+				<div class="col-sm-8 text-info"><b>{{ data.order_date.substr(0, 10) }}</b></div>
 			</div>
 		</div>
 	</form>
@@ -59,15 +59,15 @@
 			<input type="number" class="form-control" placeholder="Cantidad" title="Cantidad" 
 			    style="width:85px; text-align: right;" 
 				ng-model="product.quantity" 
-				ng-change="getTotalProduct()" 
+				ng-change="calculateDetailTotals()" 
 				ng-keypress="setFocus($event, 'price')">
 		</div>
 		<div class="form-group input-group input-group-sm">
 			<span class="input-group-addon">$</span>
-			<input type="number" class="form-control" placeholder="Precio" title="Precio" 
-			    style="width:85px; text-align: right;" 
+			<input type="number" class="form-control" placeholder="Precio Uni." title="Precio Unitario" 
+			    style="width:95px; text-align: right;" 
 				ng-model="product.price" 
-				ng-change="getTotalProduct()" 
+				ng-change="calculateDetailTotals()" 
 				ng-keypress="setFocus($event, 'add')">
 		</div>
 		<button class="btn btn-success btn-xs" id="btnAddProduct" ng-click="addProduct()" title="Agregar Producto">
@@ -84,18 +84,25 @@
 	<table class="table table-condensed table-bordered cls-table">
 		<thead>
 			<tr>
-				<th>Código</th>
-				<th>Descripción</th>
+				<th class="text-center" width="80">Acciones</th>
+				<th>Código - Descripción</th>
 				<th class="text-center" width="100">Cantidad</th>
 				<th class="text-center" width="100">Precio</th>
-				<th class="text-center" width="100">Total</th>
-				<th class="text-center" width="80">Acciones</th>
+				<th class="text-center" width="100">Subtotal</th>
+				<th class="text-center" width="50">IVA %</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr data-ng-repeat="(key, detail) in data.purchase_order_details" ng-hide="detail._deleted">
-				<td>{{ detail.product.code }}</td>
+				<td align="center">
+					<div class="cls-actions">
+						<button class="btn btn-danger btn-xs" ng-click="deleteProduct(detail, key)" ng-hide="data.status.is_final">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</div>
+				</td>
 				<td>
+					<div>{{ detail.product.code }}</div>
 					<div class="cls-small">{{ detail.product.description }}</div>
 				</td>
 				<td align="right">
@@ -120,26 +127,33 @@
 							ng-keypress="keyPressDetail($event, 'price')">
 					</div>
 				</td>
-				<td align="right">{{ detail.total | currency }}</td>
-				<td align="center">
-					<div class="cls-actions">
-						<button class="btn btn-danger btn-xs" ng-click="deleteProduct(detail, key)" ng-hide="data.status.is_final">
-							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-						</button>
-					</div>
+				<td align="right">{{ detail.subtotal | currency }}</td>
+				<td align="right">
+					<div class="cls-xsmall">{{ detail.iva | number : 2 }}</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<div class="row cls-toolbar-gray">
-		<div class="col-sm-10">
-			<button class="btn btn-primary" ng-hide="data.status.is_final" ng-click="save()">Guardar</button>
+	<div class="row">
+		<div class="col-sm-8">
+			<button class="btn btn-primary" ng-hide="data.id" ng-click="save()">Guardar</button>
 			<a class="btn btn-warning" href="#/purchase-orders">Cerrar</a>
 			<a class="btn btn-default" ng-show="data.id" href="/purchase_orders/{{ data.id }}/print_pdf" target="_blank">Imprimir</a>
 		</div>
-		<div class="col-sm-2">
-			<span class="cls-total-amount">{{ data.total | currency }}</span>
+		<div class="col-sm-4 cls-total-amount">
+			<div class="row">
+				<div class="col-sm-5 text-right">Subtotal:</div>
+				<div class="col-sm-7 text-right">{{ data.subtotal | currency }}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-5 text-right">IVA:</div>
+				<div class="col-sm-7 text-right">{{ data.iva_amount | currency }}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-5 text-right"><b>Total:</b></div>
+				<div class="col-sm-7 text-right"><b>{{ data.total | currency }}</b></div>
+			</div>
 		</div>
 	</div>
 

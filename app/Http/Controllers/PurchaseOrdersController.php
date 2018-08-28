@@ -43,6 +43,8 @@ class PurchaseOrdersController extends BaseController {
      */
     public function store(Request $request)
     {
+        $subtotal = 0;
+        $iva_amount = 0;
         $total = 0;
 
         // get default status for new purchase order
@@ -59,23 +61,27 @@ class PurchaseOrdersController extends BaseController {
             foreach ($request->purchase_order_details as $item) {
                 if (isset($item['_deleted'])) continue;
 
-                $detail = new PurchaseOrderDetail;
-                $detail->product_id = $item['product_id'];
-                $detail->quantity = $item['quantity'];
-                $detail->price = $item['price'];
-                $detail->total = $item['quantity'] * $item['price'];
-                $total += $detail->total;
+                $dt = new PurchaseOrderDetail;
+                $dt->product_id = intval($item['product_id']);
+                $dt->quantity = floatval($item['quantity']);
+                $dt->price = floatval($item['price']);
+                $dt->subtotal = $dt->quantity * $dt->price;
+                $dt->iva = floatval($item['iva']);
+                $dt->iva_amount = $dt->subtotal * ($dt->iva / 100);
+                $dt->total = $dt->iva_amount + $dt->subtotal;
+                
+                $subtotal += $dt->subtotal;
+                $iva_amount += $dt->iva_amount;
+                $total += $dt->total;
 
-                $purchase->purchase_order_details()->save($detail);
-
-                // mark product as worked
-                // $product = Product::find($item['product_id']);
-                // $product->setWorked();
+                $purchase->purchase_order_details()->save($dt);
 
                 // update vendor price
-                $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
+                $this->updateVendorPrice($dt->product_id, $purchase->vendor_id, $dt->price);
             }
 
+            $purchase->subtotal = $subtotal;
+            $purchase->iva_amount = $iva_amount;
             $purchase->total = $total;
             $purchase->save();
 
@@ -94,70 +100,7 @@ class PurchaseOrdersController extends BaseController {
      */
     public function update($id, Request $request)
     {
-        $rules = $this->formRules;
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return Response::json(array('msg' => 'Revise las validaciones'), 501);
-        } else {
-            $purchase = PurchaseOrder::find($id);
-            $total = 0;
-
-            if (! $purchase) {
-                return Response::json(array('msg' => 'Orden de Compra inexistente'), 500);
-            }
-
-            try {
-                $purchase->vendor_id = $request->vendor_id;
-                $purchase->comments = $request->comments;
-                $purchase->save();
-
-                foreach ($request->purchase_order_details as $item) {
-                    $id_detail = isset($item['id']) ? $item['id'] : 0;
-                    
-                    if ($id_detail) {
-                        $detail = PurchaseOrderDetail::find($item['id']);
-
-                        if (isset($item['_deleted'])) {
-                            $detail->delete();
-                            continue;
-                        }
-
-                    } else {
-                        if (isset($item['_deleted'])) continue;
-                        $detail = new PurchaseOrderDetail;
-
-                        // mark product as worked
-                        // $product = Product::find($item['product_id']);
-                        // $product->setWorked();
-                    }
-                    
-                    $detail->product_id = $item['product_id'];
-                    $detail->quantity = $item['quantity'];
-                    $detail->price = $item['price'];
-                    $detail->total = $item['quantity'] * $item['price'];
-
-                    if ($id_detail) {
-                        $detail->save();
-                    } else {
-                        $purchase->purchase_order_details()->save($detail);
-                    }
-
-                    $total += $detail->total;
-
-                    // update vendor price
-                    $this->updateVendorPrice($item['product_id'], $purchase->vendor_id, $item['price']);
-                }
-
-                $purchase->total = $total;
-                $purchase->save();
-
-            } catch (Exception $e) {
-                return Response::json(array('msg' => 'Error al guardar'), 500);
-            }
-            
-            return $purchase;
-        }
+        return Response::json(array('msg' => 'No puede editar una Order de Compra'), 500);
     }
 
     /**
