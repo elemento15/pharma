@@ -1,4 +1,4 @@
-app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, StatusService, toastr) {
+app.controller('PurchaseOrdersController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, PurchaseOrderService, ProductService, VendorService, toastr) {
 	this.index = '/purchase-orders';
 	this.title = {
 		new:  'Nueva Orden de Compra',
@@ -22,7 +22,7 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	$scope.data = {
 		id:        0,
 		vendor_id: '',
-		status_id: '',
+		status: 'N',
 		order_date: '',
 		subtotal: 0,
 		iva_amount: 0,
@@ -30,13 +30,11 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		active: 1,
 		comments: '',
 		purchase_order_details: [],
-		vendor: null,
-		status: null
+		vendor: null
 	};
 
 	$scope.filters = {
-		active: '',
-		status_id: ''
+		status: ''
 	}
 
 	$scope.product = {
@@ -53,23 +51,12 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 	$scope.input_price = 0;
 
 	$scope.vendorsList = [];
-	$scope.statusList = [];
 
 	$scope.getVendors = function () {
 		VendorService.read({
 			filters: [{ field: 'active', value: 1 }]
 		}).success(function (response) {
 			$scope.vendorsList = response;
-		}).error(function (response) {
-			toastr.error(response.msg || 'Error en el servidor');
-		});
-	}
-
-	$scope.getStatuses = function () {
-		StatusService.read({
-			filters: [{ field: 'type', value: 'PO' }]
-		}).success(function (response) {
-			$scope.statusList = response;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -233,11 +220,6 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		};
 	}
 
-	/*$scope.getTotalProduct = function () {
-		var product = $scope.product;
-		$scope.product.total = product.quantity * product.price;
-	}*/
-
 	$scope.deleteProduct = function (product, key) {
 		$scope.data.purchase_order_details[key]._deleted = true;
 		$scope.calculateTotal();
@@ -301,42 +283,6 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		}).success(function (response) {
 			$scope.product.price = response.price;
 			$scope.calculateDetailTotals();
-		}).error(function (response) {
-			toastr.error(response.msg || 'Error en el servidor');
-		});
-	}
-
-	$scope.openChangeStatus = function (order) {
-		var modal = $uibModal.open({
-			ariaLabelledBy: 'modal-title',
-			ariaDescribedBy: 'modal-body',
-			templateUrl: '/partials/templates/modalChangeStatus.html',
-			controller: 'ModalChangeStatus',
-			controllerAs: '$ctrl',
-			size: 'sm',
-			resolve: {
-				items: function () {
-					return {
-						statusList: $scope.statusList
-					};
-				}
-			}
-		});
-
-		modal.result.then(function (status) {
-			if (status) {
-				$scope.changeStatus(order, status);
-			}
-		});
-	}
-
-	$scope.changeStatus = function (order, status) {
-		PurchaseOrderService.change_status({
-			id: order.id,
-			status: status.id
-		}).success(function (response) {
-			order.status_id = response.id;
-			order.status = response;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -407,8 +353,37 @@ app.controller('PurchaseOrdersController', function ($scope, $http, $route, $loc
 		});
 	}
 
+	$scope.cancel = function () {
+		var id = $scope.data.id;
+
+		$ngConfirm({
+			title: 'Cancelar',
+			content: '¿Desea cancelar el registro actual?',
+			type: 'red',
+			buttons: {
+				ok: {
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function () {
+						PurchaseOrderService.cancel({
+							id: id
+						}).success(function (response) {
+							toastr.success('Registro Cancelado');
+							$location.path('/purchase-orders');
+						}).error(function (response) {
+							toastr.error(response.msg || 'Error en el servidor');
+						});
+					}
+				},
+				close: {
+					text: 'Omitir',
+					btnClass: 'btn-default'
+				}
+			}
+		});
+	}
+
 	$scope.getVendors();
-	$scope.getStatuses();
 
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, PurchaseOrderService, toastr);
 });

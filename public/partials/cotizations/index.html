@@ -7,26 +7,17 @@
 		</div>
 
 		<!-- filters -->
-		<div class="col-sm-3">
-			<div class="form-inline">
-				<div class="form-group">
-					<label>Estado:</label>
-					<select class="form-control" ng-model="filters.active" ng-change="changeFilter()">
-						<option value="">(Todos)</option>
-						<option value="1">Activos</option>
-						<option value="0">Inactivos</option>
-					</select>
-				</div>
-			</div>
-		</div>
+		<div class="col-sm-3">&nbsp;</div>
 
 		<div class="col-sm-3">
 			<div class="form-inline">
 				<div class="form-group">
-					<label>Status:</label>
-					<select class="form-control" ng-model="filters.status_id" ng-change="changeFilter()">
+					<label>Estado:</label>
+					<select class="form-control" ng-model="filters.status" ng-change="changeFilter()">
 						<option value="">(Todos)</option>
-						<option ng-repeat="item in statusList" value="{{item.id}}">{{ item.name }}</option>
+						<option value="N">Nuevos</option>
+						<option value="P">Pagados</option>
+						<option value="C">Cancelados</option>
 					</select>
 				</div>
 			</div>
@@ -46,7 +37,6 @@
 				<th width="80">Fecha</th>
 				<th>Cliente</th>
 				<th class="text-center">Total</th>
-				<th width="80" class="text-center">Status</th>
 				<th width="80" class="text-center">Estado</th>
 			</tr>
 		</thead>
@@ -74,26 +64,10 @@
 					<div>{{ rec.total | currency }}</div>
 				</td>
 				<td align="center">
-					<span class="label label-info cls-pointer" 
-					      ng-show="rec.status.is_default" 
-					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
-					</span>
-					<span class="label label-warning cls-pointer" 
-					      ng-hide="rec.status.is_default || rec.status.is_final" 
-					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
-					</span>
-					<span class="cls-small cls-pointer" 
-					      ng-show="rec.status.is_final" 
-					      ng-click="openChangeStatus(rec)">{{ rec.status.name }}
-					</span>
-				</td>
-				<td align="center">
-					<div ng-hide="rec.status_loading">
-						<span class="label label-default cls-pointer" ng-if="rec.active" ng-click="setInactive(rec)">Activo</span>
-						<span class="label label-warning cls-pointer" ng-if="!rec.active" ng-click="setActive(rec)">Inactivo</span>
-					</div>
-					<div ng-show="rec.status_loading">
-						<img src="/images/loading.gif">
+					<div>
+						<span class="label label-info"    ng-show="rec.status == 'N'">Nuevo</span>
+						<span class="label label-success" ng-show="rec.status == 'P'">Pagado</span>
+						<span class="label label-danger"  ng-show="rec.status == 'C'">Cancelado</span>
 					</div>
 				</td>
 			</tr>

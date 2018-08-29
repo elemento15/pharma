@@ -2,8 +2,6 @@
 
 use App\Cotization;
 use App\CotizationDetail;
-// use App\Product;
-use App\Status;
 
 use App\Http\Controllers\Controller;
 
@@ -20,11 +18,11 @@ class CotizationsController extends BaseController {
     // params needen for index
     protected $searchFields = ['id'];
     protected $indexPaginate = 10;
-    protected $indexJoins = ['customer', 'status'];
+    protected $indexJoins = ['customer'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
-    protected $showJoins = ['customer', 'status', 'cotization_details', 'cotization_details.product'];
+    protected $showJoins = ['customer', 'cotization_details', 'cotization_details.product'];
     
     // params needed for store/update
     protected $defaultNulls = [];
@@ -47,14 +45,14 @@ class CotizationsController extends BaseController {
         $total = 0;
 
         // get default status for new cotization
-        $status = Status::where('type', 'COT')->where('is_default', 1)->first();
+        //$status = Status::where('type', 'COT')->where('is_default', 1)->first();
         
         try {
             $cotization = new Cotization;
             $cotization->customer_id = $request->customer_id;
             $cotization->comments = $request->comments;
             $cotization->cotization_date = date('Y-m-d H:i:s');
-            $cotization->status_id = $status->id;
+            //$cotization->status_id = $status->id;
             $cotization->save();
 
             foreach ($request->cotization_details as $item) {
@@ -102,13 +100,40 @@ class CotizationsController extends BaseController {
     }
 
     /**
+     * Cancel cotization
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function cancel($id)
+    {
+        $record = Cotization::find($id);
+
+        if (! $record) {
+            return Response::json(array('msg' => 'Registro no encontrado'), 500);
+        }
+
+        if ($record->status != 'N') {
+            return Response::json(array('msg' => 'Estado inválido'), 500);
+        }
+
+        $record->status = 'C';
+
+        if ($record->save()) {
+            return Response::json($record);
+        } else {
+            return Response::json(array('msg' => 'Error al cancelar'), 500);
+        }
+    }
+
+    /**
      * Change status to cotization.
      *
      * @param  int  $id
      * @param  int  $status_id
      * @return Response
      */
-    public function change_status($id, Request $request)
+    /*public function change_status($id, Request $request)
     {
         $record = Cotization::find($id);
 
@@ -123,7 +148,7 @@ class CotizationsController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al activar'), 500);
         }
-    }
+    }*/
 
     /**
      * Print cotization pdf

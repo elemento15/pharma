@@ -110,14 +110,8 @@ app.factory('PurchaseOrderService', ['$http', function($http) {
 		delete   : function(data) {
 			return $http.delete('purchase_orders/'+ data.id);
 		},
-		activate : function(data) {
-			return $http.post('purchase_orders/'+ data.id +'/activate');
-		},
-		deactivate : function(data) {
-			return $http.post('purchase_orders/'+ data.id +'/deactivate');
-		},
-		change_status : function (data) {
-			return $http.post('purchase_orders/'+ data.id +'/change_status', data);
+		cancel   : function(data) {
+			return $http.post('purchase_orders/'+ data.id +'/cancel');
 		}
 	}
 }]);
@@ -136,25 +130,8 @@ app.factory('CotizationService', ['$http', function($http) {
 		delete   : function(data) {
 			return $http.delete('cotizations/'+ data.id);
 		},
-		activate : function(data) {
-			return $http.post('cotizations/'+ data.id +'/activate');
-		},
-		deactivate : function(data) {
-			return $http.post('cotizations/'+ data.id +'/deactivate');
-		},
-		change_status : function (data) {
-			return $http.post('cotizations/'+ data.id +'/change_status', data);
-		}
-	}
-}]);
-
-app.factory('StatusService', ['$http', function($http) {
-	return {
-		get  : function (data) {
-			return $http.get('statuses/'+ data.id);
-		},
-		read : function(data) {
-			return $http.get('statuses?'+ jQuery.param(data), data);
+		cancel   : function(data) {
+			return $http.post('cotizations/'+ data.id +'/cancel');
 		}
 	}
 }]);

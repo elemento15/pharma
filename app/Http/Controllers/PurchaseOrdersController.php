@@ -2,8 +2,6 @@
 
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
-// use App\Product;
-use App\Status;
 use App\VendorPrice;
 
 use App\Http\Controllers\Controller;
@@ -21,11 +19,11 @@ class PurchaseOrdersController extends BaseController {
     // params needen for index
     protected $searchFields = ['id'];
     protected $indexPaginate = 10;
-    protected $indexJoins = ['vendor', 'status'];
+    protected $indexJoins = ['vendor'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
-    protected $showJoins = ['vendor', 'status', 'purchase_order_details', 'purchase_order_details.product'];
+    protected $showJoins = ['vendor', 'purchase_order_details', 'purchase_order_details.product'];
     
     // params needed for store/update
     protected $defaultNulls = [];
@@ -48,14 +46,14 @@ class PurchaseOrdersController extends BaseController {
         $total = 0;
 
         // get default status for new purchase order
-        $status = Status::where('type', 'PO')->where('is_default', 1)->first();
+        //$status = Status::where('type', 'PO')->where('is_default', 1)->first();
         
         try {
             $purchase = new PurchaseOrder;
             $purchase->vendor_id = $request->vendor_id;
             $purchase->comments = $request->comments;
             $purchase->order_date = date('Y-m-d H:i:s');
-            $purchase->status_id = $status->id;
+            //$purchase->status_id = $status->id;
             $purchase->save();
 
             foreach ($request->purchase_order_details as $item) {
@@ -104,13 +102,40 @@ class PurchaseOrdersController extends BaseController {
     }
 
     /**
+     * Cancel cotization
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function cancel($id)
+    {
+        $record = PurchaseOrder::find($id);
+
+        if (! $record) {
+            return Response::json(array('msg' => 'Registro no encontrado'), 500);
+        }
+
+        if ($record->status != 'N') {
+            return Response::json(array('msg' => 'Estado inválido'), 500);
+        }
+
+        $record->status = 'C';
+
+        if ($record->save()) {
+            return Response::json($record);
+        } else {
+            return Response::json(array('msg' => 'Error al cancelar'), 500);
+        }
+    }
+
+    /**
      * Change status to purchase order.
      *
      * @param  int  $id
      * @param  int  $status_id
      * @return Response
      */
-    public function change_status($id, Request $request)
+    /*public function change_status($id, Request $request)
     {
         $record = PurchaseOrder::find($id);
 
@@ -125,7 +150,7 @@ class PurchaseOrdersController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al activar'), 500);
         }
-    }
+    }*/
 
     /**
      * Print purchase order pdf

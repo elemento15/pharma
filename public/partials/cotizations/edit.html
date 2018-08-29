@@ -175,8 +175,9 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<button class="btn btn-primary" ng-hide="data.id" ng-click="save()">Guardar</button>
-			<a class="btn btn-warning" href="#/cotizations">Cerrar</a>
 			<a class="btn btn-default" ng-show="data.id" href="/cotizations/{{ data.id }}/print_pdf" target="_blank">Imprimir</a>
+			<button class="btn btn-danger" ng-show="data.id && data.status == 'N'" ng-click="cancel()">Cancelar</button>
+			<a class="btn btn-warning" href="#/cotizations">Cerrar</a>
 		</div>
 		<div class="col-sm-4 cls-total-amount">
 			<div class="row">

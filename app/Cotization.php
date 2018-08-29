@@ -16,9 +16,4 @@ class Cotization extends Model {
 		return $this->belongsTo('App\Customer');
 	}
 
-	public function status()
-	{
-		return $this->belongsTo('App\Status');
-	}
-
 }

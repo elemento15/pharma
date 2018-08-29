@@ -1,4 +1,4 @@
-app.controller('CotizationsController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, CotizationService, ProductService, CustomerService, StatusService, toastr) {
+app.controller('CotizationsController', function ($scope, $http, $route, $location, $timeout, $ngConfirm, $uibModal, CotizationService, ProductService, CustomerService, toastr) {
 	this.index = '/cotizations';
 	this.title = {
 		new:  'Nueva Cotización',
@@ -22,7 +22,7 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 	$scope.data = {
 		id:        0,
 		customer_id: '',
-		status_id: '',
+		status: 'N',
 		cotization_date: '',
 		subtotal: 0,
 		iva_amount: 0,
@@ -30,13 +30,11 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		active: 1,
 		comments: '',
 		cotization_details: [],
-		customer: null,
-		status: null
+		customer: null
 	};
 
 	$scope.filters = {
-		active: '',
-		status_id: ''
+		status: ''
 	}
 
 	$scope.product = {
@@ -55,23 +53,12 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 	$scope.input_price = 0;
 
 	$scope.customersList = [];
-	$scope.statusList = [];
 
 	$scope.getCustomers = function () {
 		CustomerService.read({
 			filters: [{ field: 'active', value: 1 }]
 		}).success(function (response) {
 			$scope.customersList = response;
-		}).error(function (response) {
-			toastr.error(response.msg || 'Error en el servidor');
-		});
-	}
-
-	$scope.getStatuses = function () {
-		StatusService.read({
-			filters: [{ field: 'type', value: 'COT' }]
-		}).success(function (response) {
-			$scope.statusList = response;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -204,8 +191,8 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 				code: product.code,
 				description: product.description
 			},
-			lot: product.lot,
-			expiration: product.expiration
+			lot: product.lot || '',
+			expiration: product.expiration || ''
 		});
 
 		$scope.clearProduct();
@@ -251,11 +238,6 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			expiration: ''
 		};
 	}
-
-	/*$scope.getTotalProduct = function () {
-		var product = $scope.product;
-		$scope.product.total = product.quantity * product.price;
-	}*/
 
 	$scope.deleteProduct = function (product, key) {
 		$scope.data.cotization_details[key]._deleted = true;
@@ -305,42 +287,6 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		$timeout(function () {
 			$('input[ng-model="product.description"]').focus().select();
 	    }, 100);
-	}
-
-	$scope.openChangeStatus = function (cotization) {
-		var modal = $uibModal.open({
-			ariaLabelledBy: 'modal-title',
-			ariaDescribedBy: 'modal-body',
-			templateUrl: '/partials/templates/modalChangeStatus.html',
-			controller: 'ModalChangeStatus',
-			controllerAs: '$ctrl',
-			size: 'sm',
-			resolve: {
-				items: function () {
-					return {
-						statusList: $scope.statusList
-					};
-				}
-			}
-		});
-
-		modal.result.then(function (status) {
-			if (status) {
-				$scope.changeStatus(cotization, status);
-			}
-		});
-	}
-
-	$scope.changeStatus = function (cotization, status) {
-		CotizationService.change_status({
-			id: cotization.id,
-			status: status.id
-		}).success(function (response) {
-			cotization.status_id = response.id;
-			cotization.status = response;
-		}).error(function (response) {
-			toastr.error(response.msg || 'Error en el servidor');
-		});
 	}
 
 	$scope.editDetail = function (detail, type) {
@@ -446,8 +392,37 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		});
 	}
 
+	$scope.cancel = function () {
+		var id = $scope.data.id;
+
+		$ngConfirm({
+			title: 'Cancelar',
+			content: '¿Desea cancelar el registro actual?',
+			type: 'red',
+			buttons: {
+				ok: {
+					text: 'Aceptar',
+					btnClass: 'btn-red',
+					action: function () {
+						CotizationService.cancel({
+							id: id
+						}).success(function (response) {
+							toastr.success('Registro Cancelado');
+							$location.path('/cotizations');
+						}).error(function (response) {
+							toastr.error(response.msg || 'Error en el servidor');
+						});
+					}
+				},
+				close: {
+					text: 'Omitir',
+					btnClass: 'btn-default'
+				}
+			}
+		});
+	}
+
 	$scope.getCustomers();
-	$scope.getStatuses();
 
 	BaseController.call(this, $scope, $route, $location, $ngConfirm, CotizationService, toastr);
 });
