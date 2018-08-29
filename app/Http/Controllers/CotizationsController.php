@@ -42,6 +42,8 @@ class CotizationsController extends BaseController {
      */
     public function store(Request $request)
     {
+        $subtotal = 0;
+        $iva_amount = 0;
         $total = 0;
 
         // get default status for new cotization
@@ -58,18 +60,26 @@ class CotizationsController extends BaseController {
             foreach ($request->cotization_details as $item) {
                 if (isset($item['_deleted'])) continue;
 
-                $detail = new CotizationDetail;
-                $detail->product_id = $item['product_id'];
-                $detail->quantity = $item['quantity'];
-                $detail->price = $item['price'];
-                $detail->total = $item['quantity'] * $item['price'];
-                $detail->lot = $item['lot'];
-                $detail->expiration = $item['expiration'];
-                $total += $detail->total;
+                $dt = new CotizationDetail;
+                $dt->product_id = intval($item['product_id']);
+                $dt->quantity = floatval($item['quantity']);
+                $dt->price = floatval($item['price']);
+                $dt->subtotal = $dt->quantity * $dt->price;
+                $dt->iva = floatval($item['iva']);
+                $dt->iva_amount = $dt->subtotal * ($dt->iva / 100);
+                $dt->total = $dt->iva_amount + $dt->subtotal;
+                $dt->lot = $item['lot'];
+                $dt->expiration = $item['expiration'];
+                
+                $subtotal += $dt->subtotal;
+                $iva_amount += $dt->iva_amount;
+                $total += $dt->total;
 
-                $cotization->cotization_details()->save($detail);
+                $cotization->cotization_details()->save($dt);
             }
 
+            $cotization->subtotal = $subtotal;
+            $cotization->iva_amount = $iva_amount;
             $cotization->total = $total;
             $cotization->save();
 
@@ -88,65 +98,7 @@ class CotizationsController extends BaseController {
      */
     public function update($id, Request $request)
     {
-        $rules = $this->formRules;
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return Response::json(array('msg' => 'Revise las validaciones'), 501);
-        } else {
-            $cotization = Cotization::find($id);
-            $total = 0;
-
-            if (! $cotization) {
-                return Response::json(array('msg' => 'Cotización inexistente'), 500);
-            }
-
-            try {
-                $cotization->customer_id = $request->customer_id;
-                $cotization->comments = $request->comments;
-                $cotization->save();
-
-                foreach ($request->cotization_details as $item) {
-                    $id_detail = isset($item['id']) ? $item['id'] : 0;
-                    
-                    if ($id_detail) {
-                        $detail = CotizationDetail::find($item['id']);
-
-                        if (isset($item['_deleted'])) {
-                            $detail->delete();
-                            continue;
-                        }
-
-                    } else {
-                        if (isset($item['_deleted'])) continue;
-                        $detail = new CotizationDetail;
-                    }
-                    
-                    $detail->product_id = $item['product_id'];
-                    $detail->quantity = $item['quantity'];
-                    $detail->price = $item['price'];
-                    $detail->total = $item['quantity'] * $item['price'];
-                    $detail->lot = $item['lot'];
-                    $detail->expiration = $item['expiration'];
-
-                    if ($id_detail) {
-                        $detail->save();
-                    } else {
-                        $cotization->cotization_details()->save($detail);
-                    }
-
-                    $total += $detail->total;
-                }
-
-                $cotization->total = $total;
-                $cotization->save();
-
-            } catch (Exception $e) {
-                return Response::json(array('msg' => 'Error al guardar'), 500);
-            }
-            
-            return $cotization;
-        }
+        return Response::json(array('msg' => 'No puede editar una Cotización'), 500);
     }
 
     /**

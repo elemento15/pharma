@@ -24,6 +24,8 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		customer_id: '',
 		status_id: '',
 		cotization_date: '',
+		subtotal: 0,
+		iva_amount: 0,
 		total: 0,
 		active: 1,
 		comments: '',
@@ -43,7 +45,8 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		description: '',
 		quantity: '',
 		price: '',
-		total: 0,
+		subtotal: 0,
+		iva: 0,
 		lot: '',
 		expiration: ''
 	};
@@ -140,7 +143,8 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			description: product.description,
 			quantity: 1,
 			price: 0,
-			total: 0
+			subtotal: 0,
+			iva: product.iva
 		};
 	}
 
@@ -163,6 +167,8 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 
 	$scope.addProduct = function () {
 		var product = $scope.product;
+		var iva_amount = 0;
+		var total = 0;
 
 		if (! product.id) {
 			toastr.warning('Seleccione un producto válido');
@@ -170,23 +176,29 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			return false;
 		}
 
-		if (parseFloat(product.price) == 0) {
+		if (parseFloat(product.price) <= 0) {
 			toastr.warning('Ingrese un precio válido');
 			$('input[ng-model="product.price"]').focus().select();
 			return false;
 		}
 
-		if (parseFloat(product.quantity) == 0) {
+		if (parseFloat(product.quantity) <= 0) {
 			toastr.warning('Ingrese una cantidad válida');
 			$('input[ng-model="product.quantity"]').focus().select();
 			return false;
 		}
+
+		iva_amount = (product.iva / 100) * product.subtotal;
+		total = product.subtotal + iva_amount;
 		
 		$scope.data.cotization_details.push({
 			product_id: product.id,
 			quantity: product.quantity,
 			price: product.price,
-			total: product.total,
+			subtotal: product.subtotal,
+			iva: product.iva,
+			iva_amount: iva_amount,
+			total: total,
 			product: {
 				id: product.id,
 				code: product.code,
@@ -233,16 +245,17 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 			description: '',
 			quantity: '',
 			price: '',
-			total: 0,
+			subtotal: 0,
+			iva: 0,
 			lot: '',
 			expiration: ''
 		};
 	}
 
-	$scope.getTotalProduct = function () {
+	/*$scope.getTotalProduct = function () {
 		var product = $scope.product;
 		$scope.product.total = product.quantity * product.price;
-	}
+	}*/
 
 	$scope.deleteProduct = function (product, key) {
 		$scope.data.cotization_details[key]._deleted = true;
@@ -250,14 +263,29 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		$scope.focusCode();
 	}
 
+	$scope.calculateDetailTotals = function () {
+		var product = $scope.product;
+		var subtotal = product.quantity * product.price;
+		var iva_amount = subtotal * product.iva;
+
+		$scope.product.subtotal = subtotal;
+	}
+
 	$scope.calculateTotal = function () {
+		var subtotal = 0;
+		var iva_amount = 0;
 		var total = 0;
+		
 		$scope.data.cotization_details.forEach(function (item) {
 			if (! item._deleted) {
+				subtotal += item.subtotal;
+				iva_amount += item.iva_amount;
 				total += item.total;
 			}
 		});
 
+		$scope.data.subtotal = subtotal;
+		$scope.data.iva_amount = iva_amount;
 		$scope.data.total = total;
 	}
 
@@ -380,7 +408,9 @@ app.controller('CotizationsController', function ($scope, $http, $route, $locati
 		}
 
 		$scope.clearEditingDetails(type);
-		detail.total = detail.quantity * detail.price;
+		detail.subtotal = detail.quantity * detail.price;
+		detail.iva_amount = (detail.iva / 100) * detail.subtotal;
+		detail.total = detail.subtotal + detail.iva_amount;
 		$scope.calculateTotal();
 	}
 
