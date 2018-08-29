@@ -31,16 +31,10 @@ Route::post('products/rpt_compare', 'ProductsController@rpt_compare');
 Route::get('products/{product}/rpt_history/{vendor}', 'ProductsController@rpt_history');
 
 Route::resource('purchase_orders', 'PurchaseOrdersController');
-//Route::post('purchase_orders/{id}/activate', 'PurchaseOrdersController@activate');
-//Route::post('purchase_orders/{id}/deactivate', 'PurchaseOrdersController@deactivate');
-//Route::post('purchase_orders/{id}/change_status', 'PurchaseOrdersController@change_status');
 Route::post('purchase_orders/{id}/cancel', 'PurchaseOrdersController@cancel');
 Route::get('purchase_orders/{id}/print_pdf', 'PurchaseOrdersController@print_pdf');
 
 Route::resource('cotizations', 'CotizationsController');
-//Route::post('cotizations/{id}/activate', 'CotizationsController@activate');
-//Route::post('cotizations/{id}/deactivate', 'CotizationsController@deactivate');
-//Route::post('cotizations/{id}/change_status', 'CotizationsController@change_status');
 Route::post('cotizations/{id}/cancel', 'CotizationsController@cancel');
 Route::get('cotizations/{id}/print_pdf', 'CotizationsController@print_pdf');
 

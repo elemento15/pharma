@@ -43,16 +43,12 @@ class CotizationsController extends BaseController {
         $subtotal = 0;
         $iva_amount = 0;
         $total = 0;
-
-        // get default status for new cotization
-        //$status = Status::where('type', 'COT')->where('is_default', 1)->first();
         
         try {
             $cotization = new Cotization;
             $cotization->customer_id = $request->customer_id;
             $cotization->comments = $request->comments;
             $cotization->cotization_date = date('Y-m-d H:i:s');
-            //$cotization->status_id = $status->id;
             $cotization->save();
 
             foreach ($request->cotization_details as $item) {
@@ -125,30 +121,6 @@ class CotizationsController extends BaseController {
             return Response::json(array('msg' => 'Error al cancelar'), 500);
         }
     }
-
-    /**
-     * Change status to cotization.
-     *
-     * @param  int  $id
-     * @param  int  $status_id
-     * @return Response
-     */
-    /*public function change_status($id, Request $request)
-    {
-        $record = Cotization::find($id);
-
-        if (! $record) {
-            return Response::json(array('msg' => 'Registro no encontrado'), 500);
-        }
-
-        $record->status_id = $request->status;
-        
-        if ($record->save()) {
-            return Response::json($record->status()->first());
-        } else {
-            return Response::json(array('msg' => 'Error al activar'), 500);
-        }
-    }*/
 
     /**
      * Print cotization pdf

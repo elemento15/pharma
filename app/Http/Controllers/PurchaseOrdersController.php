@@ -44,16 +44,12 @@ class PurchaseOrdersController extends BaseController {
         $subtotal = 0;
         $iva_amount = 0;
         $total = 0;
-
-        // get default status for new purchase order
-        //$status = Status::where('type', 'PO')->where('is_default', 1)->first();
         
         try {
             $purchase = new PurchaseOrder;
             $purchase->vendor_id = $request->vendor_id;
             $purchase->comments = $request->comments;
             $purchase->order_date = date('Y-m-d H:i:s');
-            //$purchase->status_id = $status->id;
             $purchase->save();
 
             foreach ($request->purchase_order_details as $item) {
@@ -127,30 +123,6 @@ class PurchaseOrdersController extends BaseController {
             return Response::json(array('msg' => 'Error al cancelar'), 500);
         }
     }
-
-    /**
-     * Change status to purchase order.
-     *
-     * @param  int  $id
-     * @param  int  $status_id
-     * @return Response
-     */
-    /*public function change_status($id, Request $request)
-    {
-        $record = PurchaseOrder::find($id);
-
-        if (! $record) {
-            return Response::json(array('msg' => 'Registro no encontrado'), 500);
-        }
-
-        $record->status_id = $request->status;
-        
-        if ($record->save()) {
-            return Response::json($record->status()->first());
-        } else {
-            return Response::json(array('msg' => 'Error al activar'), 500);
-        }
-    }*/
 
     /**
      * Print purchase order pdf
