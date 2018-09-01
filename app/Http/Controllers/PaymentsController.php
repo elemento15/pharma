@@ -50,6 +50,18 @@ class PaymentsController extends BaseController {
         $record->cancel_date = date('Y-m-d H:i:s');
 
         if ($record->save()) {
+            // set status "N" to purchase orders or cotization
+
+            foreach ($record->purchase_payments as $item) {
+                $item->purchase_order->status = 'N';
+                $item->purchase_order->save();
+            }
+
+            foreach ($record->cotization_payments as $item) {
+                $item->cotization->status = 'N';
+                $item->cotization->save();
+            }
+
             return Response::json($record);
         } else {
             return Response::json(array('msg' => 'Error al cancelar'), 500);

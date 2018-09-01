@@ -69,13 +69,12 @@ app.controller('CustomersController', function ($scope, $http, $route, $location
 		}
 
 		CotizationService.read({
-			page: pagination.page, // @LMNT
+			page: pagination.page,
 			filters: filters,
 			limit: pagination.limit
 		}).success(function (response) {
 			$scope.cotizationList = response.data;
 			$scope.setCotizationPagination(response);
-			//$scope.selCotizationIndex = 0;
 		}).error(function (response) {
 			toastr.error(response.msg || 'Error en el servidor');
 		});
@@ -105,7 +104,8 @@ app.controller('CustomersController', function ($scope, $http, $route, $location
 			resolve: {
 				items: function () {
 					return {
-						cotization: cotization,
+						model: cotization,
+						modelType: 'COTIZATION',
 						paymentTypesList: $scope.paymentTypesList
 					};
 				}

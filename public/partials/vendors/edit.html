@@ -69,83 +69,110 @@
 			</div>
 
 			<div class="row">
-				<div class="col-sm-12">
+				<div class="col-xs-12">
 					<div class="row">
-						<div class="col-sm-8">
+						<div class="col-xs-7">
 							<button class="btn btn-sm btn-primary" ng-click="save()">Guardar</button>
 							<a class="btn btn-sm btn-warning" href="#/vendors">Cerrar</a>
 							<a class="btn btn-sm btn-info" href="#/vendors-prices/{{data.id}}">Ver Precios</a>
 						</div>
-						<div class="col-sm-4">
-							<div class="text-danger text-right">SALDO: $15,250.00</div>
+						<div class="col-xs-5">
+							<div class="text-danger text-right cls-balance">Saldo: {{ data.balance | currency }}</div>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<br>
 		</div>
 
 		<div class="col-sm-6" ng-show="data.id">
-			<h4 class="text-muted">Ordenes de Compras</h4>
+			<!-- Purchase Orders -->
+			<div class="row">
+				<div class="col-xs-6">
+					<h4 class="text-muted">Ordenes de Compra</h4>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-inline pull-right" style="margin-top:5px;">
+						<div class="form-group-sm">
+							<select class="form-control" ng-model="ordersFilters.status" ng-change="getOrders()">
+								<option value="">(Todas)</option>
+								<option value="N">Nuevas</option>
+								<option value="P">Pagadas</option>
+								<option value="C">Canceladas</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
 
-			<table class="table table-condensed table-bordered cls-table">
+			<table class="table table-condensed table-bordered cls-table" style="margin-bottom: 2px;">
 				<thead>
 					<tr>
 						<th class="text-center" width="60">ID</th>
-						<th class="text-center" width="80">Fecha</th>
+						<th class="text-center" width="100">Fecha</th>
 						<th class="text-center">Total</th>
 						<th class="text-center">Saldo</th>
-						<th class="text-center" width="80">Status</th>
+						<th class="text-center" width="82">Estado</th>
+						<th class="text-center" width="38">&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class="text-right">5</td>
-						<td class="text-center">2018-08-20</td>
-						<td class="text-right">$15,000.00</td>
-						<td class="text-right">$15,000.00</td>
-						<td class="text-center">
-							<span class="label label-info">Nuevo</span>
+					<tr ng-repeat="(key, item) in orderList"
+					    ng-click="selectOrder(key)"
+					    ng-class="{ info : key == selOrderIndex }">
+						<td class="text-right">
+							<a href="/purchase_orders/{{ item.id }}/print_pdf" target="_blank">
+								<b>{{ item.id }}</b>
+							</a>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">4</td>
-						<td class="text-center">2018-08-15</td>
-						<td class="text-right">$10,00.00</td>
-						<td class="text-right">$8,000.00</td>
-						<td class="text-center">
-							<span class="label label-info">Nuevo</span>
+						<td class="text-center">{{ item.purchase_date.substr(0, 10) }}</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">3</td>
-						<td class="text-center">2018-08-10</td>
-						<td class="text-right">$8,000.00</td>
-						<td class="text-right">$0.00</td>
-						<td class="text-center">
-							<span class="label label-danger">Cancelado</span>
+						<td class="text-right">{{ item.total | currency }}</td>
+						<td class="text-right">
+							<div class="text-muted cls-small" ng-hide="item.balance">{{ item.balance | currency }}</div>
+							<div class="text-danger" ng-show="item.balance">{{ item.balance | currency }}</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">2</td>
-						<td class="text-center">2018-08-05</td>
-						<td class="text-right">$9,500.00</td>
-						<td class="text-right">$0.00</td>
 						<td class="text-center">
-							<span class="label label-success">Pagado</span>
+							<span class="label label-info" ng-show="item.status == 'N'">Nueva</span>
+							<span class="label label-danger" ng-show="item.status == 'C'">Cancelada</span>
+							<span class="label label-success" ng-show="item.status == 'P'">Pagada</span>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">1</td>
-						<td class="text-center">2018-08-01</td>
-						<td class="text-right">$12,000.00</td>
-						<td class="text-right">$0.00</td>
-						<td class="text-center">
-							<span class="label label-success">Pagado</span>
+						<td>
+							<div class="cls-actions">
+								<button class="btn btn-xs btn-warning" ng-click="openPaymentModal(item)" 
+								        ng-show="item.status == 'N'"
+								        title="Agregar abono">+$</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 
+			<!-- paginator -->
+			<div class="row">
+				<div class="col-sm-12">
+					<nav class="cls-pagination">
+						<ul class="pagination">
+							<li ng-click="paginateOrder('first')">
+								<span aria-hidden="true">&laquo; &laquo;</span>
+							</li>
+							<li ng-click="paginateOrder('previous')">
+								<span aria-hidden="true">&laquo;</span>
+							</li>
+							<li><span>{{ pageOrderInfo }}</span></li>
+							<li ng-click="paginateOrder('next')">
+								<span aria-hidden="true">&raquo;</span>
+							</li>
+							<li ng-click="paginateOrder('last')">
+								<span aria-hidden="true">&raquo; &raquo;</span>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+
+			<!-- Payments -->
 			<h4 class="text-muted">Abonos</h4>
 
 			<table class="table table-condensed table-bordered cls-table">
@@ -156,38 +183,33 @@
 						<th class="text-center">Importe</th>
 						<th class="text-center">Tipo</th>
 						<th class="text-center" width="80">Estado</th>
+						<th class="text-center" width="38">&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class="text-right">5</td>
-						<td class="text-center">2018-08-28</td>
-						<td class="text-right">$4,000.00</td>
-						<td class="text-center">Tarjeta de Crédito</td>
+					<tr ng-repeat="(key, item) in orderList[selOrderIndex].purchase_payments">
+						<td class="text-right">{{ item.payment.id }}</td>
 						<td class="text-center">
-							<span class="label label-info">Activo</span>
+							<div class="cls-small">{{ item.payment.payment_date.substr(0, 10) }}</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">4</td>
-						<td class="text-center">2018-08-25</td>
-						<td class="text-right">$2,500.00</td>
-						<td class="text-center">Efectivo</td>
+						<td class="text-right">{{ item.amount | currency }}</td>
 						<td class="text-center">
-							<span class="label label-info">Activo</span>
+							<div class="cls-small">{{ item.payment.type.name }}</div>
 						</td>
-					</tr>
-					<tr>
-						<td class="text-right">3</td>
-						<td class="text-center">2018-08-25</td>
-						<td class="text-right">$2,500.00</td>
-						<td class="text-center">Transferencia</td>
 						<td class="text-center">
-							<span class="label label-danger">Cancelado</span>
+							<span class="label label-default" ng-show="item.payment.active">Activo</span>
+							<span class="label label-danger" ng-hide="item.payment.active">Cancelado</span>
+						</td>
+						<td>
+							<div class="cls-actions">
+								<button class="btn btn-xs btn-danger" ng-click="cancelPayment(item.payment)"
+								        ng-show="item.payment.active" title="Cancelar abono"><b>&nbsp;X&nbsp;</b></button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+
 		</div>
 	</form>
 </div>

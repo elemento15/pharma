@@ -2,6 +2,8 @@
 
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
+use App\Payment;
+use App\PurchasePayment;
 use App\VendorPrice;
 
 use App\Http\Controllers\Controller;
@@ -19,7 +21,7 @@ class PurchaseOrdersController extends BaseController {
     // params needen for index
     protected $searchFields = ['id'];
     protected $indexPaginate = 10;
-    protected $indexJoins = ['vendor'];
+    protected $indexJoins = ['vendor', 'purchase_payments.payment.type'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
@@ -122,6 +124,50 @@ class PurchaseOrdersController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al cancelar'), 500);
         }
+    }
+
+    public function save_payment($id, Request $request)
+    {
+        $order = PurchaseOrder::find($id);
+
+        $amount = floatval($request->amount);
+        $type = intval($request->payment_type_id);
+
+        // validations
+        if ($amount <= 0) {
+            return Response::json(array('msg' => 'Importe inválido'), 500);
+        }
+
+        if ($type <= 0) {
+            return Response::json(array('msg' => 'Tipo de pago inválido'), 500);
+        }
+
+        if ($amount > $order->balance) {
+            return Response::json(array('msg' => 'Importe mayor al saldo '. $order->balance), 500);
+        }
+
+        // create Payment
+        $payment = Payment::create([
+            'payment_date' => date('Y-m-d H:i:s'),
+            'amount' => $amount,
+            'payment_type_id' => $type,
+            'comments' => $request->comments
+        ]);
+
+        // create PurchasePayment
+        PurchasePayment::create([
+            'purchase_order_id' => $order->id,
+            'payment_id' => $payment->id,
+            'amount' => $amount
+        ]);
+
+        // mark purchase order as paid
+        if ($amount == $order->balance) {
+            $order->status = 'P';
+            $order->save();
+        } 
+
+        return $payment;
     }
 
     /**

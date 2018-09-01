@@ -34,10 +34,11 @@
 			<tr>
 				<th width="75">Acciones</th>
 				<th>Num.</th>
-				<th width="80">Fecha</th>
+				<th width="85">Fecha</th>
 				<th>Proveedor</th>
-				<th class="text-center">Total</th>
-				<th width="80" class="text-center">Estado</th>
+				<th class="text-center" width="100">Total</th>
+				<th class="text-center" width="100">Saldo</th>
+				<th class="text-center" width="80">Estado</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -57,11 +58,17 @@
 					<div>{{ rec.order_date.substr(0, 10) }}</div>
 				</td>
 				<td>
-					<div>{{ rec.vendor.name }}</div>
+					<div>
+						<a href="#/vendors-edit/{{ rec.vendor.id }}">{{ rec.vendor.name }}</a>
+					</div>
 					<div class="cls-small"><i>{{ rec.vendor.rfc }}</i></div>
 				</td>
 				<td align="right">
 					<div>{{ rec.total | currency }}</div>
+				</td>
+				<td align="right">
+					<div class="text-muted" ng-hide="rec.balance">{{ rec.balance | currency }}</div>
+					<div class="text-danger" ng-show="rec.balance">{{ rec.balance | currency }}</div>
 				</td>
 				<td align="center">
 					<div>
@@ -84,7 +91,7 @@
 					</li>
 					<li ng-click="paginate('previous')">
 						<span aria-hidden="true">&laquo;</span>
-					</li>-
+					</li>
 					<li><span>{{ pageInfo }}</span></li>
 					<li ng-click="paginate('next')">
 						<span aria-hidden="true">&raquo;</span>

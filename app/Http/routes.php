@@ -32,6 +32,7 @@ Route::get('products/{product}/rpt_history/{vendor}', 'ProductsController@rpt_hi
 
 Route::resource('purchase_orders', 'PurchaseOrdersController');
 Route::post('purchase_orders/{id}/cancel', 'PurchaseOrdersController@cancel');
+Route::post('purchase_orders/{id}/save_payment', 'PurchaseOrdersController@save_payment');
 Route::get('purchase_orders/{id}/print_pdf', 'PurchaseOrdersController@print_pdf');
 
 Route::resource('cotizations', 'CotizationsController');

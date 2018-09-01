@@ -112,6 +112,9 @@ app.factory('PurchaseOrderService', ['$http', function($http) {
 		},
 		cancel   : function(data) {
 			return $http.post('purchase_orders/'+ data.id +'/cancel');
+		},
+		savePayment : function(data) {
+			return $http.post('purchase_orders/'+ data.purchase_id +'/save_payment', data);
 		}
 	}
 }]);
