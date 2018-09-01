@@ -2,6 +2,8 @@
 
 use App\Cotization;
 use App\CotizationDetail;
+use App\Payment;
+use App\CotizationPayment;
 
 use App\Http\Controllers\Controller;
 
@@ -18,7 +20,7 @@ class CotizationsController extends BaseController {
     // params needen for index
     protected $searchFields = ['id'];
     protected $indexPaginate = 10;
-    protected $indexJoins = ['customer'];
+    protected $indexJoins = ['customer', 'cotization_payments.payment.type'];
     protected $orderBy = ['field' => 'id', 'type' => 'DESC'];
 
     // params needer for show
@@ -120,6 +122,50 @@ class CotizationsController extends BaseController {
         } else {
             return Response::json(array('msg' => 'Error al cancelar'), 500);
         }
+    }
+
+    public function save_payment($id, Request $request)
+    {
+        $cotization = Cotization::find($id);
+
+        $amount = floatval($request->amount);
+        $type = intval($request->payment_type_id);
+
+        // validations
+        if ($amount <= 0) {
+            return Response::json(array('msg' => 'Importe inválido'), 500);
+        }
+
+        if ($type <= 0) {
+            return Response::json(array('msg' => 'Tipo de pago inválido'), 500);
+        }
+
+        if ($amount > $cotization->balance) {
+            return Response::json(array('msg' => 'Importe mayor al saldo'), 500);
+        }
+
+        // create Payment
+        $payment = Payment::create([
+            'payment_date' => date('Y-m-d H:i:s'),
+            'amount' => $amount,
+            'payment_type_id' => $type,
+            'comments' => $request->comments
+        ]);
+
+        // create CotizationPayment
+        CotizationPayment::create([
+            'cotization_id' => $cotization->id,
+            'payment_id' => $payment->id,
+            'amount' => $amount
+        ]);
+
+        // mark cotization as paid
+        if ($amount == $cotization->balance) {
+            $cotization->status = 'P';
+            $cotization->save();
+        } 
+
+        return $payment;
     }
 
     /**

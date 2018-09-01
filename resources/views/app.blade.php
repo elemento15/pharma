@@ -51,6 +51,7 @@
 	<!-- components -->
     <script src="/app/components/modal_products_search.js"></script>
     <script src="/app/components/modal_change_status.js"></script>
+    <script src="/app/components/modal_payment.js"></script>
     
 	<!-- controllers -->
     <script src="/app/controllers/home_controller.js"></script>

@@ -132,6 +132,46 @@ app.factory('CotizationService', ['$http', function($http) {
 		},
 		cancel   : function(data) {
 			return $http.post('cotizations/'+ data.id +'/cancel');
+		},
+		savePayment : function(data) {
+			return $http.post('cotizations/'+ data.cotization_id +'/save_payment', data);
 		}
+	}
+}]);
+
+app.factory('PaymentTypeService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('payment_types/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('payment_types/'+ data.id, data) : $http.post('payment_types', data);
+		},
+		read     : function(data) {
+			return $http.get('payment_types?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('payment_types/'+ data.id);
+		}
+	}
+}]);
+
+app.factory('PaymentService', ['$http', function($http) {
+	return {
+		get      : function (data) {
+			return $http.get('payments/'+ data.id);
+		},
+		save     : function (data) {
+			return (data.id) ? $http.patch('payments/'+ data.id, data) : $http.post('payments', data);
+		},
+		read     : function(data) {
+			return $http.get('payments?'+ jQuery.param(data), data);
+		},
+		delete   : function(data) {
+			return $http.delete('payments/'+ data.id);
+		},
+		cancel   : function(data) {
+			return $http.post('payments/'+ data.id +'/cancel');
+		},
 	}
 }]);

@@ -22,6 +22,7 @@ class BaseController extends Controller {
     {
         $search = $request->search;
         $filters = $request->filters;
+        $limit = ($request->limit) ? $request->limit : $this->indexPaginate;
         $model = new $this->mainModel;
 
         // set relationships
@@ -55,7 +56,7 @@ class BaseController extends Controller {
         }
 
         if ($request->page) {
-            $model = $model->paginate($this->indexPaginate);
+            $model = $model->paginate($limit);
         } else {
             $model = $model->get();
         }

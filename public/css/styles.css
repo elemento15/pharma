@@ -154,3 +154,9 @@ ul.pagination {
 	font-size: 14px;
 	color: #5d88c3;
 }
+
+.cls-balance {
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 5px;
+}

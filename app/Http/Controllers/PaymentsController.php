@@ -1,0 +1,58 @@
+<?php namespace App\Http\Controllers;
+
+use App\Payment;
+
+use App\Http\Controllers\Controller;
+
+use Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class PaymentsController extends BaseController {
+
+	protected $mainModel = 'App\Payment';
+
+    // params needen for index
+    protected $searchFields = ['id'];
+    protected $indexPaginate = 10;
+    protected $indexJoins = [];
+    protected $orderBy = ['field' => 'payment_date', 'type' => 'DESC'];
+
+    // params needer for show
+    protected $showJoins = ['type'];
+    
+    // params needed for store/update
+    protected $defaultNulls = [];
+    protected $formRules = [];
+
+    protected $allowDelete = false;
+
+
+    /**
+     * Cancel payment
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function cancel($id)
+    {
+        $record = Payment::find($id);
+
+        if (! $record) {
+            return Response::json(array('msg' => 'Registro no encontrado'), 500);
+        }
+
+        if (! $record->active) {
+            return Response::json(array('msg' => 'Abono Cancelado'), 500);
+        }
+
+        $record->active = 0;
+        $record->cancel_date = date('Y-m-d H:i:s');
+
+        if ($record->save()) {
+            return Response::json($record);
+        } else {
+            return Response::json(array('msg' => 'Error al cancelar'), 500);
+        }
+    }
+}

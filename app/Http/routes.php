@@ -36,12 +36,18 @@ Route::get('purchase_orders/{id}/print_pdf', 'PurchaseOrdersController@print_pdf
 
 Route::resource('cotizations', 'CotizationsController');
 Route::post('cotizations/{id}/cancel', 'CotizationsController@cancel');
+Route::post('cotizations/{id}/save_payment', 'CotizationsController@save_payment');
 Route::get('cotizations/{id}/print_pdf', 'CotizationsController@print_pdf');
 
 
 Route::resource('statuses', 'StatusesController');
 
 Route::resource('vendor_prices', 'VendorPricesController');
+
+Route::resource('payment_types', 'PaymentTypesController');
+
+Route::resource('payments', 'PaymentsController');
+Route::post('payments/{id}/cancel', 'PaymentsController@cancel');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
