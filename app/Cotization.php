@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cotization extends Model {
 
-	protected $guarded = ['id'];
+	protected $guarded = ['id','balance'];
 	protected $appends = ['balance'];
 
 	public function cotization_details()

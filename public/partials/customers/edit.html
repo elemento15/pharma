@@ -113,9 +113,12 @@
 					<tr ng-repeat="(key, item) in cotizationList"
 					    ng-click="selectCotization(key)"
 					    ng-class="{ info : key == selCotizationIndex }">
-						<td class="text-right">{{ item.id }}</td>
-						<td class="text-center">
-							<div class="cls-small">{{ item.cotization_date.substr(0, 10) }}</div>
+						<td class="text-right">
+							<a href="/cotizations/{{ item.id }}/print_pdf" target="_blank">
+								<b>{{ item.id }}</b>
+							</a>
+						</td>
+						<td class="text-center">{{ item.cotization_date.substr(0, 10) }}</div>
 						</td>
 						<td class="text-right">{{ item.total | currency }}</td>
 						<td class="text-right">
@@ -192,7 +195,7 @@
 						<td>
 							<div class="cls-actions">
 								<button class="btn btn-xs btn-danger" ng-click="cancelPayment(item.payment)"
-								        ng-show="item.payment.active" title="Cancelar abono"><b>X</b></button>
+								        ng-show="item.payment.active" title="Cancelar abono"><b>&nbsp;X&nbsp;</b></button>
 							</div>
 						</td>
 					</tr>
