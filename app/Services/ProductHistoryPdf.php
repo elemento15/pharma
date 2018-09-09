@@ -77,9 +77,17 @@ class ProductHistoryPdf extends Fpdf {
             $order = $item->purchase_order()->first();
             $order_date = Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $order->order_date);
 
+            switch ($order->status) {
+                case 'N' : $status = 'Nueva'; break;
+                case 'C' : $status = 'Cancelada'; break;
+                case 'P' : $status = 'Pagada'; break;
+            }
+
             $this->Cell(20, 5, $order->id, $border, 0, 'R', $fill);
             $this->Cell(25, 5, $order_date->format('d/M/Y'), $border, 0, 'C', $fill);
-            $this->Cell(25, 5, $order->status()->first()->name, $border, 0, 'C', $fill);
+            
+            $this->Cell(25, 5, $status, $border, 0, 'C', $fill);
+            
             $this->Cell(20, 5, number_format($item->quantity), $border, 0, 'R', $fill);
             $this->Cell(22, 5, number_format($item->price, 2), $border, 0, 'R', $fill);
             $this->Cell(22, 5, number_format($item->total, 2), $border, 0, 'R', $fill);
@@ -110,7 +118,7 @@ class ProductHistoryPdf extends Fpdf {
         $vendor = $this->vendor->id;
 
         $data = PurchaseOrderDetail::whereHas('purchase_order', function ($query) use ($product, $vendor) {
-            $query->where('vendor_id', $vendor)->where('active', 1);
+            $query->where('vendor_id', $vendor);
         })->where('product_id', $product)->get();
         
         $this->details = $data;
