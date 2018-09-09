@@ -115,6 +115,10 @@ class CotizationsController extends BaseController {
             return Response::json(array('msg' => 'Estado inválido'), 500);
         }
 
+        if ($record->total > $record->balance) {
+            return Response::json(array('msg' => 'Abonos activos existentes'), 500);
+        }
+
         $record->status = 'C';
 
         if ($record->save()) {
